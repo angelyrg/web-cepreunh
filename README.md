@@ -30,6 +30,12 @@
 - [Icons](https://icon-sets.iconify.design/)
 - [Sliders](https://swiperjs.com/demos)
 
+## vs-code extensions
+
+- [Astro](https://marketplace.visualstudio.com/items?itemName=astro-build.astro-vscode)
+- [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
+
 ## Styles
 
 - Text Color: `#2C2C2C`

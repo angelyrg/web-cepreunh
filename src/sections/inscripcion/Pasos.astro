@@ -1,0 +1,16 @@
+---
+const { pasos, activo } = Astro.props
+---
+
+<div class="flex justify-center">
+  <div class="flex flex-wrap gap-2 md:gap-4">
+    {
+      pasos.map((paso, index) => (
+        <div
+          class={`flex w-48 items-center justify-center rounded-lg border-4 p-3 text-center ${activo === index ? 'border-green-600' : 'border-gray-300'}`}>
+          {paso}
+        </div>
+      ))
+    }
+  </div>
+</div>

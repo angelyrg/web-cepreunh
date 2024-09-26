@@ -1,0 +1,52 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import Image from 'astro/components/Image.astro'
+import Navbar from '@/sections/inscripcion/Navbar.astro'
+import Pasos from '@/sections/inscripcion/Pasos.astro'
+
+import ValidationForm from '@/components/react/inscripcion/ValidationForm'
+
+import LogoCepreUNHBlanco from './public/assets/CeprUNH-positivo.png'
+
+const pasos = ['Datos personales', 'Matrícula', 'Encuesta socioeconómica', 'Ficha de inscripción']
+const pasoActivo = 0
+---
+
+<Layout title="CepreUNH - Matrícula Virtual">
+  <Navbar />
+  <main class="mx-auto max-w-6xl">
+    <div class="my-3">
+      <Pasos pasos={pasos} activo={pasoActivo} />
+    </div>
+
+    <section class="mt-8">
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div class="shadow">
+          <div class="bg-primary-800 px-3 py-3">
+            <Image
+              src={LogoCepreUNHBlanco}
+              alt="Banner Home"
+              width={180}
+              loading="eager"
+              class=""
+            />
+          </div>
+          <h3 class="mt-10 text-xl font-medium uppercase text-primary-800">
+            Universidad Nacional de Huancavelica
+          </h3>
+          <h3 class="text-xl">Centro Pre Universitario</h3>
+          <p class="mt-5">
+            Coloca el número de DNI y el número de transacción que aparece en tu boleta de pago.
+            Estos datos nos ayudarán a verificar que has realizado el pago de inscripción.
+          </p>
+          <div class="">
+            <ValidationForm client:load />
+          </div>
+        </div>
+        <div class="shadow">
+          <p>Otro contenido..</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

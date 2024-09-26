@@ -1,0 +1,26 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import Navbar from '@/sections/inscripcion/Navbar.astro'
+import Pasos from '@/sections/inscripcion/Pasos.astro'
+
+import DatosPersonalesForm from '@/components/react/inscripcion/DatosPersonalesForm'
+
+const pasos = ['Datos personales', 'Matrícula', 'Encuesta socioeconómica', 'Ficha de inscripción']
+const pasoActivo = 1
+---
+
+<Layout title="CepreUNH - Matrícula Virtual - Datos personales">
+  <Navbar />
+  <main class="mx-auto max-w-6xl">
+    <div class="my-3">
+      <Pasos pasos={pasos} activo={pasoActivo} />
+    </div>
+    <section class="mt-8">
+      <div class="shadow">
+        <div>
+          <DatosPersonalesForm client:load />
+        </div>
+      </div>
+    </section>
+  </main></Layout
+>

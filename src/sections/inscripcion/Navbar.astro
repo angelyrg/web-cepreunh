@@ -1,0 +1,15 @@
+---
+import { Image } from 'astro:assets'
+import LogoCepreUNHBlanco from './public/assets/CeprUNH-positivo.png'
+---
+
+<nav class="bg-primary-800 text-white">
+  <div class="mx-auto flex max-w-6xl justify-between py-2 align-middle">
+    <div class="flex items-center justify-center align-middle">
+      <h5 class="text-xl font-medium">Matrícula virtual</h5>
+    </div>
+    <div class="flex items-center justify-center">
+      <Image src={LogoCepreUNHBlanco} alt="Banner Home" width={180} loading="eager" class="" />
+    </div>
+  </div>
+</nav>

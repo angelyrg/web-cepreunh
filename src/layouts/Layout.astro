@@ -1,34 +1,32 @@
 ---
-import '@fontsource/poppins/400.css';
-import '@fontsource/poppins/500.css';
+import '@fontsource/poppins/400.css'
+import '@fontsource/poppins/500.css'
 
 interface Props {
-	title: string;
+  title: string
 }
 
-const { title } = Astro.props;
+const { title } = Astro.props
 ---
 
 <!doctype html>
 <html lang="es">
-	<head>
-		<meta charset="UTF-8" />
-		<meta charset="UTF-8">
-		<meta name="description" content="Astro description" />
-		<meta name="viewport" content="width=device-width,initial-scale=1" />
-		<link rel="icon" type="image/ico" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
-	</head>
-	<body>
-		<div class="max-w-6xl mx-auto">
-			<slot />
-		</div>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" type="image/ico" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
 </html>
 
 <style is:global>
-	html{
-		font-family: 'Poppins', sans-serif;
-	}
+  html {
+    font-family: 'Poppins', sans-serif;
+  }
 </style>
