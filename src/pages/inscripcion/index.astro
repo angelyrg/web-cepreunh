@@ -19,10 +19,10 @@ const pasoActivo = 0
       <Pasos pasos={pasos} activo={pasoActivo} />
     </div>
 
-    <section class="mt-8">
+    <section class="mt-4">
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div class="shadow">
-          <div class="bg-primary-800 px-3 py-3">
+        <div class="rounded-lg border shadow">
+          <div class="rounded-sm bg-primary-800 px-3 py-3">
             <Image
               src={LogoCepreUNHBlanco}
               alt="Banner Home"
@@ -31,20 +31,21 @@ const pasoActivo = 0
               class=""
             />
           </div>
-          <h3 class="mt-10 text-xl font-medium uppercase text-primary-800">
+          <h3 class="mt-2 text-xl font-medium uppercase text-primary-800">
             Universidad Nacional de Huancavelica
           </h3>
           <h3 class="text-xl">Centro Pre Universitario</h3>
-          <p class="mt-5">
-            Coloca el número de DNI y el número de transacción que aparece en tu boleta de pago.
-            Estos datos nos ayudarán a verificar que has realizado el pago de inscripción.
-          </p>
+          <p class="mt-5">Valida tu pago de matrícula para continuar</p>
           <div class="">
             <ValidationForm client:load />
           </div>
         </div>
         <div class="shadow">
-          <p>Otro contenido..</p>
+          <img
+            class="rounded-lg"
+            src="https://z-p3-scontent.flim3-3.fna.fbcdn.net/v/t39.30808-6/461280063_837102258596848_4156604364462224611_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeG-XpBhuZVbk1Tjv77wEc_a6-wRgTYIAFTr7BGBNggAVBjVwV5brRQgD4Z11dIIr8VCv3DBYdtjOcY97l5p8u40&_nc_ohc=k1XUkiHHsMoQ7kNvgEL5_aw&_nc_zt=23&_nc_ht=z-p3-scontent.flim3-3.fna&oh=00_AYACmCp1X3C1_GBUSTzvNemPU9WlT-bl-LHXdThPnOwAyA&oe=66FBA7EB"
+            alt=""
+          />
         </div>
       </div>
     </section>
