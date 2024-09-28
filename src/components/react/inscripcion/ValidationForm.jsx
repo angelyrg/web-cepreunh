@@ -16,14 +16,44 @@ const validationSchema = Yup.object().shape({
 })
 
 const ValidationForm = () => {
+  const apiUrl = import.meta.env.PUBLIC_API_URL
+
   const initialValues = {
     dni: '',
     nTransaccion: '',
     ciclo: ''
   }
 
-  const handleSubmit = async (values) => {
-    console.log(values)
+  const handleSubmit = async (values, { setErrors }) => {
+    const validationApi = `${apiUrl}/matricula_virtual/validacion`
+    try {
+      const response = await fetch(validationApi, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          dni: values.dni,
+          nTransaccion: values.nTransaccion,
+          ciclo: values.ciclo
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        const errors = data.errors || {}
+        const errorMessage = data.message || 'Error en la petición'
+        setErrors(errors)
+        throw new Error(errorMessage)
+      }
+
+      console.log('Respuesta de la API:', data)
+      //TODO: Redirigir a la siguiente pantalla
+
+    } catch (error) {
+      console.error('Error al hacer la petición:', error)
+    }
   }
 
   return (
@@ -40,8 +70,6 @@ const ValidationForm = () => {
             name="nTransaccion"
             placeholder="Número de transacción"
           />
-
-          <InputLabel label="Ciclo académico" name="ciclo" />
 
           <SelectLabel
             label="Ciclo académico"
