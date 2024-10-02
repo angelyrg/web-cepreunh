@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
+import axios from 'axios'
+
 import InputLabel from '../InputLabel'
 import SelectLabel from '../SelectLabel'
 import Button from '../Button'
 
 import paises from '../../../../data/paises.json'
-import departamentos from '../../../../data/ubigeo/departamentos.json'
-import provincias from '../../../../data/ubigeo/provincias.json'
-import distritos from '../../../../data/ubigeo/distritos.json'
 
 const validationSchema = Yup.object().shape({
   // id: Yup.string().required('El ID es requerido'),
-  tipo_documento: Yup.string().required('El tipo de documento es requerido'),
+  tipo_documento_id: Yup.string().required('El tipo de documento es requerido'),
   nro_documento: Yup.string()
     .required('El número de documento es requerido')
     .matches(/^[0-9]+$/, 'El número de documento debe ser solo números'),
@@ -21,8 +20,11 @@ const validationSchema = Yup.object().shape({
     .max(100, 'El nombre no puede exceder los 100 caracteres'),
   apellido_paterno: Yup.string()
     .required('El apellido paterno es requerido')
-    .max(100, 'El apellido no puede exceder los 100 caracteres'),
-  apellido_materno: Yup.string().max(100, 'El apellido no puede exceder los 100 caracteres'),
+    .max(100, 'El apellido paterno no puede exceder los 100 caracteres'),
+  apellido_materno: Yup.string().max(
+    100,
+    'El apellido materno no puede exceder los 100 caracteres'
+  ),
   pais_nacimiento: Yup.string().required('El país de nacimiento es requerido'),
   nacionalidad: Yup.string().required('La nacionalidad es requerida'),
   telefono_personal: Yup.string()
@@ -34,30 +36,51 @@ const validationSchema = Yup.object().shape({
     .matches(/^[0-9]+$/, 'El WhatsApp debe ser solo números')
     .min(9, 'El WhatsApp debe tener al menos 9 dígitos')
     .max(9, 'El WhatsApp no puede exceder los 9 dígitos'),
-  telefono_apoderado: Yup.string()
-    .matches(/^[0-9]*$/, 'El teléfono del apoderado debe ser solo números')
-    .max(15, 'El teléfono del apoderado no puede exceder los 15 dígitos'),
   correo_personal: Yup.string()
     .required('El correo personal es requerido')
     .email('El correo personal debe ser un correo válido'),
   correo_institucional: Yup.string().email('El correo institucional debe ser un correo válido'),
-  tipo_colegio: Yup.string().required('El tipo de colegio es requerido'),
-  nombre_colegio: Yup.string().required('El nombre del colegio es requerido'),
+
+  // Cambios en la validación de colegio
+  colegio_id: Yup.string().required('El ID del colegio es requerido'),
   year_culminacion: Yup.number()
     .required('El año de culminación es requerido')
     .min(1900, 'El año debe ser mayor a 1900')
     .max(new Date().getFullYear(), `El año no puede ser mayor a ${new Date().getFullYear()}`),
-  departamento: Yup.string().required('El departamento es requerido'),
-  provincia: Yup.string().required('La provincia es requerida'),
-  distrito: Yup.string().required('El distrito es requerido'),
-  direccion: Yup.string().required('La dirección es requerida')
+
+  // Validaciones de ubigeo
+  ubigeodepartamento_id: Yup.string().required('El departamento es requerido'),
+  ubigeoprovincia_id: Yup.string().required('La provincia es requerida'),
+  ubigeodistrito_id: Yup.string().required('El distrito es requerido'),
+  direccion: Yup.string().required('La dirección es requerida'),
+
+  // Si deseas incluir la validación del apoderado
+  apoderado_id: Yup.string().nullable() // Puedes ajustar según sea necesario
   // estado: Yup.string().oneOf(['activo', 'inactivo'], 'El estado debe ser "activo" o "inactivo"')
 })
 
+const apiClient = axios.create({
+  baseURL: import.meta.env.PUBLIC_API_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+
+export const fetchData = async (endpoint, params = {}) => {
+  try {
+    const response = await apiClient.get(endpoint, { params })
+    return response.data
+  } catch (error) {
+    console.error('Error en la petición:', error)
+    throw error
+  }
+}
+
 const DatosPersonalesForm = () => {
-  const initialValues = {
-    id: '1', //TODO: obtener del API
-    tipo_documento: '',
+  const apiUrl = import.meta.env.PUBLIC_API_URL
+  const [initialValues, setInitialValues] = useState({
+    id: '',
+    tipo_documento_id: '',
     nro_documento: '',
     nombres: '',
     apellido_paterno: '',
@@ -66,61 +89,115 @@ const DatosPersonalesForm = () => {
     nacionalidad: 'Peruano',
     telefono_personal: '',
     whatsapp: '',
-    telefono_apoderado: '',
     correo_personal: '',
     correo_institucional: '',
-    tipo_colegio: '',
-    nombre_colegio: '',
-    year_culminacion: '',
-    departamento: '',
-    provincia: '',
-    distrito: '',
-    direccion: '123',
-    estado: 'activo'
-  }
 
+    ubigeodepartamento_id: '',
+    ubigeoprovincia_id: '',
+    ubigeodistrito_id: '',
+    direccion: '',
+
+    colegio_id: '',
+    year_culminacion: '',
+
+    apoderado_id: '',
+
+    estado: ''
+  })
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const uuid = params.get('data')
+
+    const fetchMatriculaData = async () => {
+      if (uuid) {
+        const data = await fetchData(`/matricula_virtual/getMatriculaByUUID/${uuid}`)
+        const estudiante = data.data.estudiante
+        setInitialValues({
+          id: estudiante.id || '',
+          tipo_documento_id: estudiante.tipo_documento_id || '',
+          nro_documento: estudiante.nro_documento || '',
+          nombres: estudiante.nombres || '',
+          apellido_paterno: estudiante.apellido_paterno || '',
+          apellido_materno: estudiante.apellido_materno || '',
+          pais_nacimiento: estudiante.pais_nacimiento || 'Perú',
+          nacionalidad: estudiante.nacionalidad || 'Peruano',
+          telefono_personal: estudiante.telefono_personal || '',
+          whatsapp: estudiante.whatsapp || '',
+          correo_personal: estudiante.correo_personal || '',
+          correo_institucional: estudiante.correo_institucional || '',
+          ubigeodepartamento_id: estudiante.ubigeodepartamento_id || '',
+          ubigeoprovincia_id: estudiante.ubigeoprovincia_id || '',
+          ubigeodistrito_id: estudiante.ubigeodistrito_id || '',
+          direccion: estudiante.direccion || '',
+          colegio_id: estudiante.colegio_id || '',
+          year_culminacion: estudiante.year_culminacion || '',
+          apoderado_id: estudiante.apoderado_id || '',
+          estado: estudiante.estado || ''
+        })
+      } else {
+        window.location.href = '/inscripcion'
+      }
+    }
+
+    fetchMatriculaData()
+
+    console.log('initialValues: ', initialValues)
+  }, [apiUrl])
+
+  // Ubicacion Geográfica
+  const [departamentos, setDepartamentos] = useState([])
+  const [provincias, setProvincias] = useState([])
+  const [distritos, setDistritos] = useState([])
   const [selectedDepartamento, setSelectedDepartamento] = useState('')
   const [selectedProvincia, setSelectedProvincia] = useState('')
-  const [filteredProvincias, setFilteredProvincias] = useState([])
-  const [filteredDistritos, setFilteredDistritos] = useState([])
+
+  // Obtener departamentos
+  useEffect(() => {
+    const getDepartamentos = async () => {
+      try {
+        const data = await fetchData('/common/ubigeos')
+        setDepartamentos(data.data)
+      } catch (error) {
+        setDepartamentos([])
+        console.error('No se pudieron obtener los ubigeos.')
+      }
+    }
+    getDepartamentos()
+    setProvincias([])
+    setDistritos([])
+  }, [])
 
   // Filtrar provincias según el departamento seleccionado
   useEffect(() => {
     if (selectedDepartamento) {
-      const provinciasFiltradas = provincias.filter(
-        (provincia) => provincia.department_id === selectedDepartamento
-      )
-
-      setFilteredProvincias(
-        provinciasFiltradas.map((item) => ({
-          id: item.id,
-          value: item.name,
-          label: item.name
-        }))
-      )
-      setSelectedProvincia('')
-      setFilteredDistritos([])
-    } else {
-      setFilteredProvincias([])
-      setFilteredDistritos([])
+      const getProvincias = async () => {
+        try {
+          const data = await fetchData(`/common/ubigeos?departamento=${selectedDepartamento}`)
+          setProvincias(data.data)
+        } catch (error) {
+          setProvincias([])
+          console.error('No se pudieron obtener los ubigeos.')
+        }
+      }
+      getProvincias()
+      setDistritos([])
     }
   }, [selectedDepartamento])
 
   // Filtrar distritos según la provincia seleccionada
   useEffect(() => {
     if (selectedProvincia) {
-      const distritosFiltrados = distritos.filter(
-        (distrito) => distrito.province_id === selectedProvincia
-      )
-      setFilteredDistritos(
-        distritosFiltrados.map((item) => ({
-          id: item.id,
-          value: item.name,
-          label: item.name
-        }))
-      )
-    } else {
-      setFilteredDistritos([])
+      const getDistritos = async () => {
+        try {
+          const data = await fetchData(`/common/ubigeos?provincia=${selectedProvincia}`)
+          setDistritos(data.data)
+        } catch (error) {
+          setDistritos([])
+          console.error('No se pudieron obtener los ubigeos.')
+        }
+      }
+      getDistritos()
     }
   }, [selectedProvincia])
 
@@ -132,7 +209,8 @@ const DatosPersonalesForm = () => {
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={handleSubmit}>
+      onSubmit={handleSubmit}
+      enableReinitialize>
       {({ isSubmitting, setFieldValue }) => (
         <Form className="mx-auto text-wrap rounded-lg border bg-white p-4 shadow-md">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -140,13 +218,13 @@ const DatosPersonalesForm = () => {
               <h2 className="w-100 mb-4 font-medium text-primary-700">Datos personales</h2>
               <SelectLabel
                 label="Tipo de documento"
-                name="tipo_documento"
+                name="tipo_documento_id"
                 options={[
                   { value: '1', label: 'DNI' },
                   { value: '2', label: 'Carnet de extranjería' }
                 ]}
                 onChange={(e) => {
-                  setFieldValue('tipo_documento', e.target.value)
+                  setFieldValue('tipo_documento_id', e.target.value)
                 }}
               />
               <InputLabel
@@ -250,39 +328,48 @@ const DatosPersonalesForm = () => {
 
               <SelectLabel
                 label="Departamento"
-                name="departamento"
+                name="ubigeodepartamento_id"
                 options={departamentos.map((item) => ({
                   id: item.id,
                   value: item.name,
-                  label: item.name
+                  label: item.descripcion
                 }))}
                 onChange={(e) => {
                   const selectedOption = e.target.options[e.target.selectedIndex]
                   const dataID = selectedOption.getAttribute('data-id')
                   setSelectedDepartamento(dataID)
-                  setFieldValue('departamento', e.target.value)
-                  setFieldValue('provincia', '')
-                  setFieldValue('distrito', '')
+                  setFieldValue('ubigeodepartamento_id', e.target.value)
+                  setFieldValue('ubigeoprovincia_id', '')
+                  setFieldValue('ubigeodistrito_id', '')
                 }}
               />
+
               <SelectLabel
                 label="Provincia"
-                name="provincia"
-                options={filteredProvincias}
+                name="ubigeoprovincia_id"
+                options={provincias.map((item) => ({
+                  id: item.id,
+                  value: item.name,
+                  label: item.descripcion
+                }))}
                 onChange={(e) => {
                   const selectedOption = e.target.options[e.target.selectedIndex]
                   const dataID = selectedOption.getAttribute('data-id')
                   setSelectedProvincia(dataID)
-                  setFieldValue('provincia', e.target.value)
-                  setFieldValue('distrito', '')
+                  setFieldValue('ubigeoprovincia_id', e.target.value)
+                  setFieldValue('ubigeodistrito_id', '')
                 }}
               />
               <SelectLabel
                 label="Distrito"
-                name="distrito"
-                options={filteredDistritos}
+                name="ubigeodistrito_id"
+                options={distritos.map((item) => ({
+                  id: item.id,
+                  value: item.name,
+                  label: item.descripcion
+                }))}
                 onChange={(e) => {
-                  setFieldValue('distrito', e.target.value)
+                  setFieldValue('ubigeodistrito_id', e.target.value)
                 }}
               />
 

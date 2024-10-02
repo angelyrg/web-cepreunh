@@ -14,15 +14,15 @@ const pasoActivo = 0
 
 <Layout title="CepreUNH - Matrícula Virtual">
   <Navbar />
-  <main class="mx-auto max-w-6xl">
+  <main class="mx-4 max-w-6xl md:mx-6 lg:mx-8 xl:mx-auto">
     <div class="my-3">
       <Pasos pasos={pasos} activo={pasoActivo} />
     </div>
 
     <section class="mt-4">
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div class="rounded-lg border shadow">
-          <div class="rounded-sm bg-primary-800 px-3 py-3">
+        <div class="rounded-lg border p-4 shadow">
+          <div class="rounded-md bg-primary-800 px-3 py-3">
             <Image
               src={LogoCepreUNHBlanco}
               alt="Banner Home"
@@ -35,7 +35,7 @@ const pasoActivo = 0
             Universidad Nacional de Huancavelica
           </h3>
           <h3 class="text-xl">Centro Pre Universitario</h3>
-          <p class="mt-5">Valida tu pago de matrícula para continuar</p>
+          <p class="mb-5 mt-3">Valida tu pago de matrícula para continuar</p>
           <div class="">
             <ValidationForm client:load />
           </div>
