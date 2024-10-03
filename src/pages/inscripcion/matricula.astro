@@ -6,10 +6,10 @@ import Pasos from '@/sections/inscripcion/Pasos.astro'
 import DatosPersonalesForm from '@/components/react/inscripcion/DatosPersonalesForm'
 
 const pasos = ['Datos personales', 'Matrícula', 'Encuesta socioeconómica', 'Ficha de inscripción']
-const pasoActivoIndex = 0
+const pasoActivoIndex = 1
 ---
 
-<Layout title="CepreUNH - Matrícula Virtual - Datos personales">
+<Layout title="CepreUNH - Matrícula Virtual - Matrícula">
   <Navbar />
   <main class="mx-4 max-w-6xl md:mx-6 lg:mx-8 xl:mx-auto">
     <div class="my-3">
@@ -18,7 +18,7 @@ const pasoActivoIndex = 0
     <section class="mt-8">
       <div class="shadow">
         <div>
-          <DatosPersonalesForm client:load />
+          <!-- TODO: Ficha de matrícula -->
         </div>
       </div>
     </section>

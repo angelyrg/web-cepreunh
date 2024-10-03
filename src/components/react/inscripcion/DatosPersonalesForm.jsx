@@ -21,10 +21,12 @@ const validationSchema = Yup.object().shape({
   apellido_paterno: Yup.string()
     .required('El apellido paterno es requerido')
     .max(100, 'El apellido paterno no puede exceder los 100 caracteres'),
-  apellido_materno: Yup.string().max(
-    100,
-    'El apellido materno no puede exceder los 100 caracteres'
-  ),
+  apellido_materno: Yup.string()
+    .required('El apellido materno es requerido')
+    .max(100, 'El apellido materno no puede exceder los 100 caracteres'),
+  fecha_nacimiento: Yup.date()
+    .required('La fecha de nacimiento es obligatoria')
+    .max(new Date(), 'La fecha de nacimiento no puede ser en el futuro'),
   pais_nacimiento: Yup.string().required('El país de nacimiento es requerido'),
   nacionalidad: Yup.string().required('La nacionalidad es requerida'),
   telefono_personal: Yup.string()
@@ -42,9 +44,11 @@ const validationSchema = Yup.object().shape({
   correo_institucional: Yup.string().email('El correo institucional debe ser un correo válido'),
 
   // Cambios en la validación de colegio
-  colegio_id: Yup.string().required('El ID del colegio es requerido'),
+  colegio_id: Yup.string().required(
+    'El colegio es requerido. Selecciona tu distrito para ver los colegios.'
+  ),
   year_culminacion: Yup.number()
-    .required('El año de culminación es requerido')
+    // .required('El año de culminación es requerido')
     .min(1900, 'El año debe ser mayor a 1900')
     .max(new Date().getFullYear(), `El año no puede ser mayor a ${new Date().getFullYear()}`),
 
@@ -85,6 +89,7 @@ const DatosPersonalesForm = () => {
     nombres: '',
     apellido_paterno: '',
     apellido_materno: '',
+    fecha_nacimiento: '',
     pais_nacimiento: 'Perú',
     nacionalidad: 'Peruano',
     telefono_personal: '',
@@ -100,18 +105,21 @@ const DatosPersonalesForm = () => {
     colegio_id: '',
     year_culminacion: '',
 
-    apoderado_id: '',
-
-    estado: ''
+    apoderado_id: ''
   })
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const uuid = params.get('data')
 
+    if (!uuid || uuid.trim() === '') {
+      window.location.href = '/inscripcion'
+    }
+
     const fetchMatriculaData = async () => {
-      if (uuid) {
+      try {
         const data = await fetchData(`/matricula_virtual/getMatriculaByUUID/${uuid}`)
+
         const estudiante = data.data.estudiante
         setInitialValues({
           id: estudiante.id || '',
@@ -120,6 +128,7 @@ const DatosPersonalesForm = () => {
           nombres: estudiante.nombres || '',
           apellido_paterno: estudiante.apellido_paterno || '',
           apellido_materno: estudiante.apellido_materno || '',
+          fecha_nacimiento: estudiante.fecha_nacimiento || '',
           pais_nacimiento: estudiante.pais_nacimiento || 'Perú',
           nacionalidad: estudiante.nacionalidad || 'Peruano',
           telefono_personal: estudiante.telefono_personal || '',
@@ -135,22 +144,26 @@ const DatosPersonalesForm = () => {
           apoderado_id: estudiante.apoderado_id || '',
           estado: estudiante.estado || ''
         })
-      } else {
+
+        setSelectedDepartamento(estudiante.ubigeodepartamento_id || '')
+        setSelectedProvincia(estudiante.ubigeoprovincia_id || '')
+        setSelectedDistrito(estudiante.ubigeodistrito_id || '')
+      } catch (error) {
+        console.error('Error al obtener datos de matrícula:', error)
         window.location.href = '/inscripcion'
       }
     }
-
     fetchMatriculaData()
-
-    console.log('initialValues: ', initialValues)
   }, [apiUrl])
 
   // Ubicacion Geográfica
   const [departamentos, setDepartamentos] = useState([])
   const [provincias, setProvincias] = useState([])
   const [distritos, setDistritos] = useState([])
+  const [colegios, setColegios] = useState([])
   const [selectedDepartamento, setSelectedDepartamento] = useState('')
   const [selectedProvincia, setSelectedProvincia] = useState('')
+  const [selectedDistrito, setSelectedDistrito] = useState('')
 
   // Obtener departamentos
   useEffect(() => {
@@ -182,6 +195,7 @@ const DatosPersonalesForm = () => {
       }
       getProvincias()
       setDistritos([])
+      setColegios([])
     }
   }, [selectedDepartamento])
 
@@ -198,11 +212,43 @@ const DatosPersonalesForm = () => {
         }
       }
       getDistritos()
+      setColegios([])
     }
   }, [selectedProvincia])
 
-  const handleSubmit = (values) => {
-    console.log(values)
+  // Filtrar coelgios según distrito seleccionado
+  useEffect(() => {
+    if (selectedDistrito) {
+      const getColegios = async () => {
+        try {
+          const data = await fetchData(`/common/colegios?ubigeo=${selectedDistrito}`)
+          setColegios(data.data)
+        } catch (error) {
+          setColegios([])
+          console.error('No se pudieron obtener los colegios.')
+        }
+      }
+      getColegios()
+    }
+  }, [selectedDistrito])
+
+  const handleSubmit = async (values) => {
+    try {
+      const { id, ...dataToUpdate } = values
+      // const uuid = new URLSearchParams(window.location.search).get('data') // Obtenemos el UUID de la URL
+
+      const response = await apiClient.put(`/matricula_virtual/estudiante/${id}`, dataToUpdate)
+
+      // Manejar la respuesta exitosa
+      console.log('Estudiante actualizado:', response.data)
+      alert('Datos actualizados con éxito')
+
+      // Aquí puedes redirigir o hacer otras acciones, como limpiar el formulario.
+    } catch (error) {
+      // Manejar errores
+      console.error('Error al actualizar los datos:', error)
+      alert('Error al actualizar los datos. Por favor, intenta nuevamente.')
+    }
   }
 
   return (
@@ -243,6 +289,7 @@ const DatosPersonalesForm = () => {
                 name="apellido_materno"
                 placeholder="Apellido materno"
               />
+              <InputLabel label="Fecha de nacimiento" name="fecha_nacimiento" type="date" />
               <SelectLabel
                 label="País de nacimiento"
                 name="pais_nacimiento"
@@ -277,14 +324,9 @@ const DatosPersonalesForm = () => {
                 label="Teléfono Personal"
                 name="telefono_personal"
                 placeholder="Teléfono personal"
+                maxLength="9"
               />
-              <InputLabel label="Whatsapp" name="whatsapp" placeholder="Whatsapp" />
-              <InputLabel
-                type="tel"
-                label="Telefono del Apoderado"
-                name="telefono_apoderado"
-                placeholder="Telefono del Apoderado"
-              />
+              <InputLabel label="Whatsapp" name="whatsapp" placeholder="Whatsapp" maxLength="9" />
               <InputLabel
                 type="email"
                 label="Correo personal"
@@ -297,31 +339,6 @@ const DatosPersonalesForm = () => {
                 name="correo_institucional"
                 placeholder="Correo institucional"
               />
-
-              <h2 className="w-100 mb-3 font-medium text-primary-700">Datos de estudio</h2>
-              <SelectLabel
-                label="Tipo colegio"
-                name="tipo_colegio"
-                options={[
-                  { value: '1', label: 'Público' },
-                  { value: '2', label: 'Privado' }
-                ]}
-                onChange={(e) => {
-                  setFieldValue('tipo_colegio', e.target.value)
-                }}
-              />
-              <InputLabel
-                label="Nombre del colegio"
-                name="nombre_colegio"
-                placeholder="Nombre del colegio"
-              />
-              <InputLabel
-                type="number"
-                label="Año de culminación"
-                name="year_culminacion"
-                placeholder="Año de culminación"
-                maxLength="4"
-              />
             </div>
             <div>
               <h2 className="w-100 mb-3 font-medium text-primary-700">Datos de ubicación</h2>
@@ -331,13 +348,11 @@ const DatosPersonalesForm = () => {
                 name="ubigeodepartamento_id"
                 options={departamentos.map((item) => ({
                   id: item.id,
-                  value: item.name,
+                  value: item.id,
                   label: item.descripcion
                 }))}
                 onChange={(e) => {
-                  const selectedOption = e.target.options[e.target.selectedIndex]
-                  const dataID = selectedOption.getAttribute('data-id')
-                  setSelectedDepartamento(dataID)
+                  setSelectedDepartamento(e.target.value)
                   setFieldValue('ubigeodepartamento_id', e.target.value)
                   setFieldValue('ubigeoprovincia_id', '')
                   setFieldValue('ubigeodistrito_id', '')
@@ -349,13 +364,11 @@ const DatosPersonalesForm = () => {
                 name="ubigeoprovincia_id"
                 options={provincias.map((item) => ({
                   id: item.id,
-                  value: item.name,
+                  value: item.id,
                   label: item.descripcion
                 }))}
                 onChange={(e) => {
-                  const selectedOption = e.target.options[e.target.selectedIndex]
-                  const dataID = selectedOption.getAttribute('data-id')
-                  setSelectedProvincia(dataID)
+                  setSelectedProvincia(e.target.value)
                   setFieldValue('ubigeoprovincia_id', e.target.value)
                   setFieldValue('ubigeodistrito_id', '')
                 }}
@@ -365,15 +378,37 @@ const DatosPersonalesForm = () => {
                 name="ubigeodistrito_id"
                 options={distritos.map((item) => ({
                   id: item.id,
-                  value: item.name,
+                  value: item.id,
                   label: item.descripcion
                 }))}
                 onChange={(e) => {
+                  setSelectedDistrito(e.target.value)
                   setFieldValue('ubigeodistrito_id', e.target.value)
                 }}
               />
 
               <InputLabel label="Dirección" name="direccion" placeholder="Dirección" />
+
+              <h2 className="w-100 mb-3 font-medium text-primary-700">Datos de estudio</h2>
+              <SelectLabel
+                label="Colegio"
+                name="colegio_id"
+                options={colegios.map((item) => ({
+                  id: item.id,
+                  value: item.id,
+                  label: item.cen_edu
+                }))}
+                onChange={(e) => {
+                  setFieldValue('colegio_id', e.target.value)
+                }}
+              />
+              <InputLabel
+                type="number"
+                label="Año de culminación"
+                name="year_culminacion"
+                placeholder="Año de culminación"
+                maxLength="4"
+              />
             </div>
           </div>
 

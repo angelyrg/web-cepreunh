@@ -1,0 +1,40 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import Navbar from '@/sections/inscripcion/Navbar.astro'
+import Pasos from '@/sections/inscripcion/Pasos.astro'
+
+import DatosPersonalesForm from '@/components/react/inscripcion/DatosPersonalesForm'
+
+const pasos = ['Datos personales', 'Matrícula', 'Encuesta socioeconómica', 'Ficha de inscripción']
+const pasoActivoIndex = 3
+---
+
+<Layout title="CepreUNH - Matrícula Virtual - Ficha de Matrícula">
+  <Navbar />
+  <main class="mx-4 max-w-6xl md:mx-6 lg:mx-8 xl:mx-auto">
+    <div class="my-3">
+      <Pasos pasos={pasos} activo={pasoActivoIndex} />
+    </div>
+    <section class="mt-8">
+      <div class="shadow">
+        <div class="mt-44 justify-center text-center">
+          <h1 class="animate-blurred-fade-in text-xl">
+            Ficha de inscripción <span class="text-gradient">Virtual</span>
+          </h1>
+          <p class="mt-10">
+            Se inscribió exitosamente a la carrera “nombre de carrera”, con la modalidad
+            “modalidad”, en la sede “sede”, en turno “turno”. Puede descargar su ficha de
+            inscripción al presionar el siguiente botón:
+          </p>
+          <div class="mt-10">
+            <a
+              href="/inscripcion"
+              class="rounded-full bg-primary-900 px-6 py-2 text-white hover:bg-primary-800">
+              Descargar ficha de matrícula
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main></Layout
+>
