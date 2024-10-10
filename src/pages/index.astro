@@ -1,8 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro'
+import TopBar from '@/components/astro/TopBar.astro'
+import MenuIcon from '@/components/react/icons/MenuIcon'
+import Menu from '@/components/react/Menu'
+import ImageSlider from '@/components/react/home/ImageSlider'
 ---
 
 <Layout title="Cepre UNH">
+  <TopBar />
+
+  <Menu client:load />
+  <ImageSlider client:load />
+
   <main class="mx-auto max-w-6xl">
     <div class="mt-44 justify-center text-center">
       <h1 class="animate-blurred-fade-in text-7xl">
