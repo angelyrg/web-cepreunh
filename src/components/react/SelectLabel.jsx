@@ -10,7 +10,7 @@ const SelectLabel = ({ label, name, options, onChange }) => {
       <Field
         as="select"
         name={name}
-        className="mt-1 w-full rounded-md border border-gray-300 bg-gray-50 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="mt-1 w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-1 focus:ring-primary-800"
         onChange={onChange}>
         <option value="" label="Seleccione una opción" />
         {options.map((option) => (

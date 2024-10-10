@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Formik, Form } from 'formik'
+import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import axios from 'axios'
 
@@ -8,8 +8,18 @@ import SelectLabel from '../SelectLabel'
 import Button from '../Button'
 
 import paises from '../../../../data/paises.json'
+import MultiSelectLabel from '../MultipleSelectLabel'
+
+const options = [
+  { id: 1, label: 'Opción 1', value: 'opcion1' },
+  { id: 2, label: 'Opción 2', value: 'opcion2' },
+  { id: 3, label: 'Opción 3', value: 'opcion3' }
+  // ... otras opciones
+]
 
 const validationSchema = Yup.object().shape({
+  selectedOptions: Yup.array().min(1, 'Selecciona al menos una opción'), //TODO: REMOVE
+
   // id: Yup.string().required('El ID es requerido'),
   tipo_documento_id: Yup.string().required('El tipo de documento es requerido'),
   nro_documento: Yup.string()
@@ -17,13 +27,15 @@ const validationSchema = Yup.object().shape({
     .matches(/^[0-9]+$/, 'El número de documento debe ser solo números'),
   nombres: Yup.string()
     .required('El nombre es requerido')
-    .max(100, 'El nombre no puede exceder los 100 caracteres'),
+    .max(150, 'El nombre no puede exceder los 150 caracteres'),
   apellido_paterno: Yup.string()
     .required('El apellido paterno es requerido')
     .max(100, 'El apellido paterno no puede exceder los 100 caracteres'),
   apellido_materno: Yup.string()
     .required('El apellido materno es requerido')
     .max(100, 'El apellido materno no puede exceder los 100 caracteres'),
+  genero_id: Yup.string().required('El género es requerido'),
+  estado_civil_id: Yup.string().required('El estado civil es requerido'),
   fecha_nacimiento: Yup.date()
     .required('La fecha de nacimiento es obligatoria')
     .max(new Date(), 'La fecha de nacimiento no puede ser en el futuro'),
@@ -43,24 +55,39 @@ const validationSchema = Yup.object().shape({
     .email('El correo personal debe ser un correo válido'),
   correo_institucional: Yup.string().email('El correo institucional debe ser un correo válido'),
 
-  // Cambios en la validación de colegio
+  tiene_discapacidad: Yup.boolean(),
+  discapacidades: Yup.array().when('tiene_discapacidad', {
+    is: true,
+    then: Yup.array().min(1, 'Seleccione al menos una opción.')
+  }),
+
+  // Validaciones de ubigeo de nacimiento
+  nacimiento_ubigeodepartamento_id: Yup.string().required(
+    'El departamento de nacimiento es requerido'
+  ),
+  nacimiento_ubigeoprovincia_id: Yup.string().required('La provincia de nacimiento es requerida'),
+  nacimiento_ubigeodistrito_id: Yup.string().required('El distrito de nacimiento es requerido'),
+
+  // Validaciones de dirección
+  direccion_ubigeodepartamento_id: Yup.string().required('El departamento es requerido'),
+  direccion_ubigeoprovincia_id: Yup.string().required('La provincia es requerida'),
+  direccion_ubigeodistrito_id: Yup.string().required('El distrito es requerido'),
+  direccion: Yup.string().required('La dirección es requerida'),
+
+  // Validaciones de colegio
   colegio_id: Yup.string().required(
     'El colegio es requerido. Selecciona tu distrito para ver los colegios.'
   ),
   year_culminacion: Yup.number()
-    // .required('El año de culminación es requerido')
     .min(1900, 'El año debe ser mayor a 1900')
     .max(new Date().getFullYear(), `El año no puede ser mayor a ${new Date().getFullYear()}`),
 
-  // Validaciones de ubigeo
-  ubigeodepartamento_id: Yup.string().required('El departamento es requerido'),
-  ubigeoprovincia_id: Yup.string().required('La provincia es requerida'),
-  ubigeodistrito_id: Yup.string().required('El distrito es requerido'),
-  direccion: Yup.string().required('La dirección es requerida'),
-
   // Si deseas incluir la validación del apoderado
-  apoderado_id: Yup.string().nullable() // Puedes ajustar según sea necesario
-  // estado: Yup.string().oneOf(['activo', 'inactivo'], 'El estado debe ser "activo" o "inactivo"')
+  apoderado_id: Yup.string().nullable(), // Puedes ajustar según sea necesario
+
+  // Validaciones de discapacidad
+  discapacidad: Yup.boolean().required('Selecione una opción'),
+  discapacidad_detalle: Yup.string().nullable() // Agregado
 })
 
 const apiClient = axios.create({
@@ -89,6 +116,8 @@ const DatosPersonalesForm = () => {
     nombres: '',
     apellido_paterno: '',
     apellido_materno: '',
+    genero_id: '',
+    estado_civil_id: '',
     fecha_nacimiento: '',
     pais_nacimiento: 'Perú',
     nacionalidad: 'Peruano',
@@ -97,9 +126,20 @@ const DatosPersonalesForm = () => {
     correo_personal: '',
     correo_institucional: '',
 
-    ubigeodepartamento_id: '',
-    ubigeoprovincia_id: '',
-    ubigeodistrito_id: '',
+    tiene_discapacidad: false,
+    discapacidades: '',
+
+    identidad_etnica_id: '',
+
+    // Ubigeo de nacimiento
+    nacimiento_ubigeodepartamento_id: '',
+    nacimiento_ubigeoprovincia_id: '',
+    nacimiento_ubigeodistrito_id: '',
+
+    // Dirección / Colegio
+    direccion_ubigeodepartamento_id: '',
+    direccion_ubigeoprovincia_id: '',
+    direccion_ubigeodistrito_id: '',
     direccion: '',
 
     colegio_id: '',
@@ -113,21 +153,25 @@ const DatosPersonalesForm = () => {
     const uuid = params.get('data')
 
     if (!uuid || uuid.trim() === '') {
-      window.location.href = '/inscripcion'
+      // window.location.href = '/inscripcion'
     }
 
     const fetchMatriculaData = async () => {
       try {
-        const data = await fetchData(`/matricula_virtual/getMatriculaByUUID/${uuid}`)
+        const data = await fetchData(`/matricula_virtual/getFullMatriculaDataByUUID/${uuid}`)
+        console.log(data.data.ubigeos_departamentos)
 
-        const estudiante = data.data.estudiante
+        const estudiante = data.data.matricula.estudiante
         setInitialValues({
+          selectedOptions: [], //TODO: REMOVE
           id: estudiante.id || '',
           tipo_documento_id: estudiante.tipo_documento_id || '',
           nro_documento: estudiante.nro_documento || '',
           nombres: estudiante.nombres || '',
           apellido_paterno: estudiante.apellido_paterno || '',
           apellido_materno: estudiante.apellido_materno || '',
+          genero_id: estudiante.genero_id || '',
+          estado_civil_id: estudiante.estado_civil_id || '',
           fecha_nacimiento: estudiante.fecha_nacimiento || '',
           pais_nacimiento: estudiante.pais_nacimiento || 'Perú',
           nacionalidad: estudiante.nacionalidad || 'Peruano',
@@ -135,26 +179,60 @@ const DatosPersonalesForm = () => {
           whatsapp: estudiante.whatsapp || '',
           correo_personal: estudiante.correo_personal || '',
           correo_institucional: estudiante.correo_institucional || '',
-          ubigeodepartamento_id: estudiante.ubigeodepartamento_id || '',
-          ubigeoprovincia_id: estudiante.ubigeoprovincia_id || '',
-          ubigeodistrito_id: estudiante.ubigeodistrito_id || '',
+
+          tiene_discapacidad: estudiante.tiene_discapacidad || false,
+          discapacidades: estudiante.discapacidades || '',
+
+          identidad_etnica_id: estudiante.identidad_etnica_id || '',
+
+          // Ubigeo de nacimiento
+          nacimiento_ubigeodepartamento_id: estudiante.nacimiento_ubigeodepartamento_id || '',
+          nacimiento_ubigeoprovincia_id: estudiante.nacimiento_ubigeoprovincia_id || '',
+          nacimiento_ubigeodistrito_id: estudiante.nacimiento_ubigeodistrito_id || '',
+
+          // Dirección
+          direccion_ubigeodepartamento_id: estudiante.direccion_ubigeodepartamento_id || '',
+          direccion_ubigeoprovincia_id: estudiante.direccion_ubigeoprovincia_id || '',
+          direccion_ubigeodistrito_id: estudiante.direccion_ubigeodistrito_id || '',
           direccion: estudiante.direccion || '',
+
           colegio_id: estudiante.colegio_id || '',
           year_culminacion: estudiante.year_culminacion || '',
-          apoderado_id: estudiante.apoderado_id || '',
-          estado: estudiante.estado || ''
+
+          apoderado_id: estudiante.apoderado_id || ''
         })
+
+        setTiposDocumentos(data.data.tipos_documentos)
+        setGeneros(data.data.generos)
+        setEstadosCiviles(data.data.estados_civiles)
+        setDiscapacidades(data.data.discapacidades)
+        setIdentidadesEtnicas(data.data.identidades_etnicas)
+        setDepartamentos(data.data.ubigeos_departamentos)
 
         setSelectedDepartamento(estudiante.ubigeodepartamento_id || '')
         setSelectedProvincia(estudiante.ubigeoprovincia_id || '')
         setSelectedDistrito(estudiante.ubigeodistrito_id || '')
       } catch (error) {
         console.error('Error al obtener datos de matrícula:', error)
-        window.location.href = '/inscripcion'
+        // window.location.href = '/inscripcion'
       }
     }
     fetchMatriculaData()
   }, [apiUrl])
+
+  // Opciones
+  const [tipos_documentos, setTiposDocumentos] = useState([])
+  const [estados_civiles, setEstadosCiviles] = useState([])
+  const [generos, setGeneros] = useState([])
+  const [discapacidades, setDiscapacidades] = useState([])
+  const [identidades_etnicas, setIdentidadesEtnicas] = useState([])
+
+  // Direccion nacimiento
+  // const [departamentos, setDepartamentos] = useState([])
+  const [nacimientoProvincias, setNacimientoProvincias] = useState([])
+  const [nacimientoDistritos, setNacimientoDistritos] = useState([])
+  const [selectedNacimientoDepartamento, setSelectedNacimientoDepartamento] = useState('')
+  const [selectedNacimientoProvincia, setSelectedNacimientoProvincia] = useState('')
 
   // Ubicacion Geográfica
   const [departamentos, setDepartamentos] = useState([])
@@ -164,22 +242,6 @@ const DatosPersonalesForm = () => {
   const [selectedDepartamento, setSelectedDepartamento] = useState('')
   const [selectedProvincia, setSelectedProvincia] = useState('')
   const [selectedDistrito, setSelectedDistrito] = useState('')
-
-  // Obtener departamentos
-  useEffect(() => {
-    const getDepartamentos = async () => {
-      try {
-        const data = await fetchData('/common/ubigeos')
-        setDepartamentos(data.data)
-      } catch (error) {
-        setDepartamentos([])
-        console.error('No se pudieron obtener los ubigeos.')
-      }
-    }
-    getDepartamentos()
-    setProvincias([])
-    setDistritos([])
-  }, [])
 
   // Filtrar provincias según el departamento seleccionado
   useEffect(() => {
@@ -232,6 +294,42 @@ const DatosPersonalesForm = () => {
     }
   }, [selectedDistrito])
 
+  // NACIMIENTO DATA
+  useEffect(() => {
+    if (selectedNacimientoDepartamento) {
+      const getProvincias = async () => {
+        try {
+          const data = await fetchData(
+            `/common/ubigeos?departamento=${selectedNacimientoDepartamento}`
+          )
+          console.log('data.data: ', data.data)
+          setNacimientoProvincias(data.data)
+        } catch (error) {
+          setNacimientoProvincias([])
+          console.error('No se pudieron obtener los ubigeos.')
+        }
+      }
+      getProvincias()
+      setNacimientoDistritos([])
+    }
+  }, [selectedNacimientoDepartamento])
+
+  // Filtrar distritos según la provincia seleccionada
+  useEffect(() => {
+    if (selectedNacimientoProvincia) {
+      const getDistritos = async () => {
+        try {
+          const data = await fetchData(`/common/ubigeos?provincia=${selectedNacimientoProvincia}`)
+          setNacimientoDistritos(data.data)
+        } catch (error) {
+          setNacimientoDistritos([])
+          console.error('No se pudieron obtener los ubigeos.')
+        }
+      }
+      getDistritos()
+    }
+  }, [selectedNacimientoProvincia])
+
   const handleSubmit = async (values) => {
     try {
       const { id, ...dataToUpdate } = values
@@ -257,18 +355,29 @@ const DatosPersonalesForm = () => {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
       enableReinitialize>
-      {({ isSubmitting, setFieldValue }) => (
-        <Form className="mx-auto text-wrap rounded-lg border bg-white p-4 shadow-md">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {({ isSubmitting, setFieldValue, errors }) => (
+        <Form className="mx-auto text-wrap rounded-xl border-[6px] border-slate-100 bg-white p-8 px-10 shadow-md">
+          {JSON.stringify(errors)}
+          <div className="flex justify-between">
             <div>
-              <h2 className="w-100 mb-4 font-medium text-primary-700">Datos personales</h2>
+              <h5 className="text-xl font-medium text-primary-800">Información del estudiante</h5>
+              <p>Completa el fomulario con tus datos.</p>
+            </div>
+            <div>
+              <Button value="Continuar" type="submit" className="px-8" disabled={isSubmitting} />
+            </div>
+          </div>
+          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div>
+              <h2 className="w-100 mb-3 font-medium text-primary-700">Datos personales</h2>
               <SelectLabel
                 label="Tipo de documento"
                 name="tipo_documento_id"
-                options={[
-                  { value: '1', label: 'DNI' },
-                  { value: '2', label: 'Carnet de extranjería' }
-                ]}
+                options={tipos_documentos.map((item) => ({
+                  id: item.id,
+                  value: item.id,
+                  label: item.descripcion
+                }))}
                 onChange={(e) => {
                   setFieldValue('tipo_documento_id', e.target.value)
                 }}
@@ -289,6 +398,31 @@ const DatosPersonalesForm = () => {
                 name="apellido_materno"
                 placeholder="Apellido materno"
               />
+              <SelectLabel
+                label="Género"
+                name="genero_id"
+                options={generos.map((item) => ({
+                  id: item.id,
+                  value: item.id,
+                  label: item.descripcion
+                }))}
+                onChange={(e) => {
+                  setFieldValue('genero_id', e.target.value)
+                }}
+              />
+              <SelectLabel
+                label="Estado civil"
+                name="estado_civil_id"
+                options={estados_civiles.map((item) => ({
+                  id: item.id,
+                  value: item.id,
+                  label: item.descripcion
+                }))}
+                onChange={(e) => {
+                  setFieldValue('estado_civil_id', e.target.value)
+                }}
+              />
+
               <InputLabel label="Fecha de nacimiento" name="fecha_nacimiento" type="date" />
               <SelectLabel
                 label="País de nacimiento"
@@ -316,8 +450,78 @@ const DatosPersonalesForm = () => {
                   setFieldValue('nacionalidad', e.target.value)
                 }}
               />
+              <SelectLabel
+                label="Identidad étnica"
+                name="identidad_etnica_id"
+                options={identidades_etnicas.map((item) => ({
+                  id: item.id,
+                  value: item.id,
+                  label: item.descripcion
+                }))}
+                onChange={(e) => {
+                  setFieldValue('identidad_etnica_id', e.target.value)
+                }}
+              />
+
+              <InputLabel label="¿Tiene dispacidad?" name="tiene_discapacidad" type="checkbox" />
+
+              <MultiSelectLabel
+                label="Selecciona opciones"
+                name="selectedOptions"
+                options={options}
+                onSearch={({ inputValue, originalItems, setItems }) => {
+                  const filteredItems = originalItems.filter((item) =>
+                    item.label.toLowerCase().includes(inputValue.toLowerCase())
+                  )
+                  setItems(filteredItems)
+                }}
+              />
             </div>
             <div>
+              <h2 className="w-100 mb-3 font-medium text-primary-700">Dirección de nacimiento</h2>
+              <SelectLabel
+                label="Departamento"
+                name="nacimiento_ubigeodepartamento_id"
+                options={departamentos.map((item) => ({
+                  id: item.id,
+                  value: item.id,
+                  label: item.descripcion
+                }))}
+                onChange={(e) => {
+                  setSelectedNacimientoDepartamento(e.target.value)
+                  setFieldValue('nacimiento_ubigeodepartamento_id', e.target.value)
+                  setFieldValue('nacimiento_ubigeoprovincia_id', '')
+                  setFieldValue('nacimiento_ubigeodistrito_id', '')
+                }}
+              />
+
+              <SelectLabel
+                label="Provincia"
+                name="nacimiento_ubigeoprovincia_id"
+                options={nacimientoProvincias.map((item) => ({
+                  id: item.id,
+                  value: item.id,
+                  label: item.descripcion
+                }))}
+                onChange={(e) => {
+                  setSelectedNacimientoProvincia(e.target.value)
+                  setFieldValue('nacimiento_ubigeoprovincia_id', e.target.value)
+                  setFieldValue('nacimiento_ubigeodistrito_id', '')
+                }}
+              />
+              <SelectLabel
+                label="Distrito"
+                name="nacimiento_ubigeodistrito_id"
+                options={nacimientoDistritos.map((item) => ({
+                  id: item.id,
+                  value: item.id,
+                  label: item.descripcion
+                }))}
+                onChange={(e) => {
+                  setFieldValue('nacimiento_ubigeodistrito_id', e.target.value)
+                }}
+              />
+
               <h2 className="w-100 mb-3 font-medium text-primary-700">Datos de contacto</h2>
               <InputLabel
                 type="tel"
@@ -345,7 +549,7 @@ const DatosPersonalesForm = () => {
 
               <SelectLabel
                 label="Departamento"
-                name="ubigeodepartamento_id"
+                name="direccion_ubigeodepartamento_id"
                 options={departamentos.map((item) => ({
                   id: item.id,
                   value: item.id,
@@ -353,15 +557,15 @@ const DatosPersonalesForm = () => {
                 }))}
                 onChange={(e) => {
                   setSelectedDepartamento(e.target.value)
-                  setFieldValue('ubigeodepartamento_id', e.target.value)
-                  setFieldValue('ubigeoprovincia_id', '')
-                  setFieldValue('ubigeodistrito_id', '')
+                  setFieldValue('direccion_ubigeodepartamento_id', e.target.value)
+                  setFieldValue('direccion_ubigeoprovincia_id', '')
+                  setFieldValue('direccion_ubigeodistrito_id', '')
                 }}
               />
 
               <SelectLabel
                 label="Provincia"
-                name="ubigeoprovincia_id"
+                name="direccion_ubigeoprovincia_id"
                 options={provincias.map((item) => ({
                   id: item.id,
                   value: item.id,
@@ -369,13 +573,13 @@ const DatosPersonalesForm = () => {
                 }))}
                 onChange={(e) => {
                   setSelectedProvincia(e.target.value)
-                  setFieldValue('ubigeoprovincia_id', e.target.value)
-                  setFieldValue('ubigeodistrito_id', '')
+                  setFieldValue('direccion_ubigeoprovincia_id', e.target.value)
+                  setFieldValue('direccion_ubigeodistrito_id', '')
                 }}
               />
               <SelectLabel
                 label="Distrito"
-                name="ubigeodistrito_id"
+                name="direccion_ubigeodistrito_id"
                 options={distritos.map((item) => ({
                   id: item.id,
                   value: item.id,
@@ -383,7 +587,7 @@ const DatosPersonalesForm = () => {
                 }))}
                 onChange={(e) => {
                   setSelectedDistrito(e.target.value)
-                  setFieldValue('ubigeodistrito_id', e.target.value)
+                  setFieldValue('direccion_ubigeodistrito_id', e.target.value)
                 }}
               />
 
@@ -411,8 +615,6 @@ const DatosPersonalesForm = () => {
               />
             </div>
           </div>
-
-          <Button value="Enviar" type="submit" disabled={isSubmitting} />
         </Form>
       )}
     </Formik>

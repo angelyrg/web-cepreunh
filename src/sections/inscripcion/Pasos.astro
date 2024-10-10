@@ -7,7 +7,7 @@ const { pasos, activo } = Astro.props
     {
       pasos.map((paso, index) => (
         <div
-          class={`flex w-48 items-center justify-center rounded-lg border-4 p-1 text-center ${activo === index ? 'border-green-600' : 'border-gray-300'}`}>
+          class={`flex w-48 items-center justify-center rounded-lg p-1 text-center ${activo === index ? 'border-2 border-green-600' : 'border-4 border-gray-300'}`}>
           {paso}
         </div>
       ))

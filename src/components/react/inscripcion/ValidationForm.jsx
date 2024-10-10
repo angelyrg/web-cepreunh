@@ -110,7 +110,7 @@ const ValidationForm = () => {
               setFieldValue('ciclo', e.target.value)
             }}
           />
-          <Button value="Consultar" type="submit" disabled={isSubmitting} />
+          <Button value="Consultar" type="submit" className="px-6" disabled={isSubmitting} />
         </Form>
       )}
     </Formik>
