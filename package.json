@@ -12,6 +12,7 @@
   "dependencies": {
     "@astrojs/react": "^3.6.2",
     "@astrojs/tailwind": "^5.1.1",
+    "@fontsource/noto-serif-jp": "^5.1.1",
     "@fontsource/poppins": "^5.1.0",
     "@midudev/tailwind-animations": "^0.1.0",
     "astro": "^4.15.8",
