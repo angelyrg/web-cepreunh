@@ -3,13 +3,15 @@ import Layout from '../layouts/Layout.astro'
 import Image from 'astro/components/Image.astro'
 
 import TopBar from '@/components/astro/TopBar.astro'
+import Footer from '@/components/astro/Footer.astro'
 import MenuIcon from '@/components/react/icons/MenuIcon'
 import ArrowRightIcon from '@/components/react/icons/ArrowRightIcon'
 import Menu from '@/components/react/Menu'
-import ImageSlider from '@/components/react/home/ImageSlider'
+import HeroSlider from '@/components/react/home/HeroSlider'
 import ComunicadosSection from '@/components/react/home/ComunicadosSection'
 import SedesSection from '@/components/react/home/SedesSection'
 import NoticiasSection from '@/components/react/home/NoticiasSection'
+import ConvocatoriasSection from '@/components/react/home/ConvocatoriasSection'
 
 import imagenJovenCepre from './public/assets/images/joven-cepre.png'
 import ButtonLink from '@/components/react/ButtonLink'
@@ -19,12 +21,12 @@ import ButtonLink from '@/components/react/ButtonLink'
   <TopBar />
 
   <Menu client:load />
-  <!-- <ImageSlider client:load /> -->
+  <HeroSlider client:load />
 
   <main>
     <div class="mx-auto flex max-w-6xl gap-8 py-8">
-      <div class="flex w-1/4 items-center justify-center text-center">
-        <Image src={imagenJovenCepre} alt="Joven Cepre" width={100} loading="eager" class="" />
+      <div class="hidden items-center justify-center px-8 text-center sm:block">
+        <Image src={imagenJovenCepre} alt="Joven Cepre" width={200} loading="eager" />
       </div>
       <div class="flex flex-col gap-2 text-left">
         <h1 class="text-4xl text-primary-800">
@@ -52,6 +54,7 @@ import ButtonLink from '@/components/react/ButtonLink'
     <ComunicadosSection client:load />
     <SedesSection client:load />
     <NoticiasSection client:load />
+    <ConvocatoriasSection />
 
     <div class="mt-44 justify-center text-center">
       <h1 class="animate-blurred-fade-in text-7xl">
@@ -70,4 +73,6 @@ import ButtonLink from '@/components/react/ButtonLink'
       </div>
     </div>
   </main>
+
+  <Footer />
 </Layout>
