@@ -4,7 +4,7 @@ import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 
-const ImageSlider = () => {
+const HeroCarousel = () => {
   const data = {
     slides: [
       {
@@ -30,24 +30,36 @@ const ImageSlider = () => {
     infinite: true,
     speed: 500,
     slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    pauseOnHover: true
+    slidesToScroll: 1
   }
 
   return (
     <div className="slider-container">
       <h2 className="text-xl font-semibold">Novedades</h2>
-      <Slider {...settings}>
+
+      <Slider {...settings}></Slider>
+
+      {/* <Slider {...settings}>
+        <div>
+          <h3>Slide 1</h3>
+        </div>
+        <div>
+          <h3>Slide 2</h3>
+        </div>
+        <div>
+          <h3>Slide 3</h3>
+        </div>
+      </Slider> */}
+
+      {/* <Slider {...settings}>
         {data.slides.map((slide) => (
           <div key={slide.id}>
             <img src={slide.image} alt={slide.alt} className="h-auto w-full" />
           </div>
         ))}
-      </Slider>
+      </Slider> */}
     </div>
   )
 }
 
-export default ImageSlider
+export default HeroCarousel
