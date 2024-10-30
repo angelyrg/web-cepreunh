@@ -1,0 +1,79 @@
+---
+import Image from 'astro/components/Image.astro'
+
+import logoCeprePositivo from './public/assets/CepreUNH-positivo.png'
+---
+
+<nav class="bg-primary-800 py-10 text-white">
+  <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div>
+        <Image
+          src={logoCeprePositivo}
+          alt="Joven Cepre"
+          width={270}
+          loading="eager"
+          draggable="false"
+          class="mx-auto sm:mx-0"
+        />
+      </div>
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div class="text-center sm:text-left">
+          <p class="mb-4 text-lg">Acerca de</p>
+          <ul class="list-none">
+            <li>
+              <a href="#">Nosotros</a>
+            </li>
+            <li>
+              <a href="#">Nuestros objetivos</a>
+            </li>
+            <li>
+              <a href="#">Directorio</a>
+            </li>
+            <li>
+              <a href="#">Docentes académicos</a>
+            </li>
+          </ul>
+        </div>
+        <div class="text-center sm:text-left">
+          <p class="mb-4 text-lg">Información</p>
+
+          <ul class="list-none">
+            <li>
+              <a href="#">Nuestras sedes</a>
+            </li>
+            <li>
+              <a href="#">Costos</a>
+            </li>
+            <li>
+              <a href="#">Ventajas</a>
+            </li>
+            <li>
+              <a href="#">Contáctanos</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="text-center sm:text-left">
+        <p class="text-[22px] leading-6">¿Tienes alguna consulta?</p>
+        <p class="">Escríbenos a nuestro buzón de consultas</p>
+        <div>
+          <div class="relative mt-4 flex items-center">
+            <input
+              type="text"
+              placeholder="Enviar mensaje"
+              class="w-full rounded-3xl border bg-white py-3 pl-4 pr-14 text-sm text-gray-800"
+            />
+
+            <div class="absolute right-4 text-primary-800">
+              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512"
+                ><path fill="currentColor" d="M496 16L15.88 208L195 289L448 64L223 317l81 179z"
+                ></path></svg
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,18 +1,61 @@
 ---
 import Layout from '../layouts/Layout.astro'
+import Image from 'astro/components/Image.astro'
+
 import TopBar from '@/components/astro/TopBar.astro'
+import Footer from '@/components/astro/Footer.astro'
 import MenuIcon from '@/components/react/icons/MenuIcon'
+import ArrowRightIcon from '@/components/react/icons/ArrowRightIcon'
 import Menu from '@/components/react/Menu'
-import HeroCarousel from '@/components/react/home/HeroCarousel.jsx'
+import HeroSlider from '@/components/react/home/HeroSlider'
+import ComunicadosSection from '@/components/react/home/ComunicadosSection'
+import SedesSection from '@/components/react/home/SedesSection'
+import NoticiasSection from '@/components/react/home/NoticiasSection'
+import ConvocatoriasSection from '@/components/react/home/ConvocatoriasSection'
+
+import imagenJovenCepre from './public/assets/images/joven-cepre.png'
+import ButtonLink from '@/components/react/ButtonLink'
 ---
 
 <Layout title="Cepre UNH">
   <TopBar />
 
   <Menu client:load />
-  <HeroCarousel client:load />
+  <HeroSlider client:load />
 
-  <main class="mx-auto max-w-6xl">
+  <main>
+    <div class="mx-auto flex max-w-6xl gap-8 py-8">
+      <div class="hidden items-center justify-center px-8 text-center sm:block">
+        <Image src={imagenJovenCepre} alt="Joven Cepre" width={200} loading="eager" />
+      </div>
+      <div class="flex flex-col gap-2 text-left">
+        <h1 class="text-4xl text-primary-800">
+          Garantía de formación <br /> académica <span class="font-noto font-semibold"
+            >a nivel de la región</span
+          >
+        </h1>
+        <p>
+          Ven y encontrarás un grato ambiente que te motivará a estudiar y muchas cosas más que
+          harán que tu preparación sea una experiencia inolvidable.
+        </p>
+        <div class="flex items-center gap-3">
+          <ButtonLink href="#" className="w-[180px]">
+            <span>Requisitos</span>
+            <ArrowRightIcon className="ml-4 text-xl" />
+          </ButtonLink>
+          <ButtonLink href="#" className="w-[180px]">
+            <span>Costos</span>
+            <ArrowRightIcon className="ml-4 text-xl" />
+          </ButtonLink>
+        </div>
+      </div>
+    </div>
+
+    <ComunicadosSection client:load />
+    <SedesSection client:load />
+    <NoticiasSection client:load />
+    <ConvocatoriasSection />
+
     <div class="mt-44 justify-center text-center">
       <h1 class="animate-blurred-fade-in text-7xl">
         Estudia en la <span class="text-gradient">CEPRE UNH</span>
@@ -30,4 +73,6 @@ import HeroCarousel from '@/components/react/home/HeroCarousel.jsx'
       </div>
     </div>
   </main>
+
+  <Footer />
 </Layout>
