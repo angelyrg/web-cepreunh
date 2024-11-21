@@ -5,36 +5,53 @@ import ArrowTopRightIcon from '../icons/ArrowTopRightIcon'
 const convocatoriasTipos = [
   {
     icono: <img src="/assets/icons/copa-icon.png" alt="Copa Icono" className="h-10 w-10" />,
+    color_hex: '#FFE2FD',
     descripcion: 'Concurso público de méritos',
     link: '#'
   },
   {
-    icono: <img src="/assets/icons/megafono-icon.png" alt="Copa Icono" className="h-10 w-10" />,
+    icono: <img src="/assets/icons/megafono-icon.png" alt="megafono Icono" className="h-10 w-10" />,
+    color_hex: '#E4F4FF',
     descripcion: 'Convocatoria CAS',
     link: '#'
   },
   {
-    icono: <img src="/assets/icons/maleta-icon.png" alt="Copa Icono" className="h-10 w-10" />,
+    icono: <img src="/assets/icons/maleta-icon.png" alt="maleta Icono" className="h-10 w-10" />,
+    color_hex: '#FFF0CC',
     descripcion: 'Prácticas profesionales',
     link: '#'
   },
   {
     icono: (
-      <img src="/assets/icons/persona-corbata-icon.png" alt="Copa Icono" className="h-10 w-10" />
+      <img
+        src="/assets/icons/persona-corbata-icon.png"
+        alt="persona-corbata Icono"
+        className="h-10 w-10"
+      />
     ),
+    color_hex: '#FFF0E3',
     descripcion: 'Nombramiento Docente',
     link: '#'
   },
   {
-    icono: <img src="/assets/icons/lupa-persona-icon.png" alt="Copa Icono" className="h-10 w-10" />,
+    icono: (
+      <img
+        src="/assets/icons/lupa-persona-icon.png"
+        alt="lupa-persona Icono"
+        className="h-10 w-10"
+      />
+    ),
+    color_hex: '#FFE2EC',
     descripcion: 'Convocatoria Docente',
     link: '#'
   }
 ]
 
-function ConvocatoriaItem({ descripcion, icono, link = '#' }) {
+function ConvocatoriaItem({ descripcion, icono, theme_color = '', link = '#' }) {
   return (
-    <a className="rounded-xl bg-white p-4 shadow-lg" href={link}>
+    <a
+      className={`rounded-xl bg-white p-4 shadow-lg transition-all hover:bg-[${theme_color}]`}
+      href={link}>
       <div className="flex h-full max-w-6xl flex-col">
         <div className="mb-3 text-3xl text-primary-800">{icono}</div>
         <div className="flex flex-grow items-end justify-between text-gray-800">
@@ -50,7 +67,7 @@ function ConvocatoriaItem({ descripcion, icono, link = '#' }) {
 
 function ConvocatoriasSection() {
   return (
-    <div className="px-4 py-8 sm:px-6 xl:px-0">
+    <section className="px-4 py-8 sm:px-6 xl:px-0">
       <div className="mx-auto max-w-6xl">
         <div className="mb-6">
           <h1 className="font-noto text-4xl font-bold text-primary-800">Nuevas convocatorias</h1>
@@ -61,12 +78,13 @@ function ConvocatoriasSection() {
               key={index}
               descripcion={convocatoria.descripcion}
               icono={convocatoria.icono}
+              theme_color={convocatoria.color_hex}
               link={convocatoria.link}
             />
           ))}
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 

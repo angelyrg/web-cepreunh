@@ -1,0 +1,19 @@
+/* HeroSlider.css */
+.hero-navigation .swiper-button-prev::after,
+.hero-navigation .swiper-button-next::after {
+  content: '' !important;
+}
+
+.hero-navigation .swiper-button-prev,
+.hero-navigation .swiper-button-next {
+  width: 40px;
+  height: 40px;
+  color: current;
+}
+
+.hero-pagination .swiper-pagination-bullet {
+  width: 32px;
+  height: 5px;
+  background-color: #ffffff;
+  border-radius: 10px;
+}

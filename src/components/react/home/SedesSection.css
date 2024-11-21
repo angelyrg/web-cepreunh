@@ -1,0 +1,17 @@
+.sedes_navigation .swiper-button-prev::after,
+.sedes_navigation .swiper-button-next::after {
+  content: '' !important;
+}
+.sedes_navigation .swiper-button-prev,
+.sedes_navigation .swiper-button-next {
+  width: 40px;
+  height: 40px;
+  color: current;
+}
+
+.custom-pagination .swiper-pagination-bullet {
+  width: 32px;
+  height: 5px;
+  background-color: #003866;
+  border-radius: 10px;
+}

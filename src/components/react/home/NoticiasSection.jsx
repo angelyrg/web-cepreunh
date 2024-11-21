@@ -22,7 +22,7 @@ const noticiasData = [
 
 function NoticiaItem({ image, fecha, titular }) {
   return (
-    <div className="w-100 mx-0 flex max-w-xs flex-col overflow-hidden rounded-xl border-2 sm:mx-6">
+    <div className="overflow-hidden rounded-xl border-2">
       <div>
         <img src={image} className="h-auto w-full object-cover" alt="" draggable="false" />
       </div>
@@ -41,7 +41,7 @@ function NoticiaItem({ image, fecha, titular }) {
 
 function NoticiasSection() {
   return (
-    <div className="bg-[#F7FBFE] px-4 py-8 sm:px-6 xl:px-0">
+    <section className="bg-[#F7FBFE] px-4 py-8 sm:px-6 xl:px-0">
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="font-noto text-4xl font-bold text-primary-800">Noticias</h1>
@@ -49,13 +49,14 @@ function NoticiasSection() {
             Ver todos
           </a>
         </div>
-        <div className="flex flex-wrap gap-3">
+        {/* <div className="flex flex-wrap gap-3"> */}
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {noticiasData.map((sede, index) => (
             <NoticiaItem key={index} image={sede.image} fecha={sede.fecha} titular={sede.titular} />
           ))}
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 

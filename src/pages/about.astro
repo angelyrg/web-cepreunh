@@ -1,0 +1,50 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+
+import AutoridadesSection from '@/components/react/about/AutoridadesSection'
+
+import ArrowRightIcon from '@/components/react/icons/ArrowRightIcon'
+---
+
+<BaseLayout title="Nosotros">
+  <article class="mx-auto mt-6 max-w-6xl px-2">
+    <div class="flex">
+      <a href="/" class="flex items-center text-primary-800">
+        <span class="rotate-180">
+          <ArrowRightIcon />
+        </span>
+        Atrás
+      </a>
+    </div>
+    <div class="mt-6 flex">
+      <h1 class="font-noto text-4xl font-bold text-primary-800">ACERCA DE NOSOTROS</h1>
+    </div>
+
+    <section class="mt-12">
+      <div class="flex flex-col gap-8 md:flex-row">
+        <div class="w-full md:w-1/2">
+          <img src="/assets/images/sede1.png" class="w-full rounded-lg" alt="" />
+        </div>
+        <div class="prose w-full md:w-1/2">
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laborum assumenda minima
+            tempora non eum, blanditiis explicabo dolore ad excepturi provident laudantium qui sed
+            at ut optio incidunt atque porro quo? Lorem ipsum dolor sit amet consectetur,
+            adipisicing elit. Quibusdam, rem. Repudiandae magnam, error magni perferendis aperiam
+            totam expedita corporis qui architecto quas
+          </p>
+          <p>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque vitae, exercitationem
+            omnis assumenda consequuntur dolores ducimus quod impedit doloribus, mollitia ut. Et
+            quidem ad illum sint, impedit consequatur voluptates ullam molestiae, adipisci cumque
+            obcaecati unde officiis recusandae porro eaque deleniti iste tempore labore voluptatibus
+            distinctio suscipit harum doloremque. Distinctio sint beatae veniam cum libero, sapiente
+            non ex quasi esse incidunt corporis, neque tempore earum nisi fugiat sed debitis.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <AutoridadesSection client:load />
+  </article>
+</BaseLayout>

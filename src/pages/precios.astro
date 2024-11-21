@@ -1,0 +1,45 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+
+import ArrowRightIcon from '@/components/react/icons/ArrowRightIcon'
+import PreciosSection from '@/components/react/precio/PreciosSection'
+import ButtonLink from '@/components/react/ButtonLink'
+---
+
+<BaseLayout title="Precios">
+  <article class="mx-auto mt-6 max-w-6xl px-2">
+    <div class="flex">
+      <a href="/" class="flex items-center text-primary-800">
+        <span class="rotate-180">
+          <ArrowRightIcon />
+        </span>
+        Atrás
+      </a>
+    </div>
+    <div class="mt-6 flex">
+      <h1 class="font-noto text-4xl font-bold text-primary-800">
+        Costos para estudiar en la CEPRE-UNH
+      </h1>
+    </div>
+
+    <PreciosSection client:load />
+
+    <div class="mb-10 mt-5">
+      <div class="prose mx-auto text-center">
+        <p>Matrículas disponibles presencial en las oficinas de CepreUNH</p>
+        <p>
+          También puedes matricularte de manera virtual desde la comodidad de tu hogar en la web de
+          cepre
+        </p>
+      </div>
+      <div class="mx-auto mt-5 w-fit">
+        <ButtonLink href="/inscripcion" className="group pe-3">
+          <span>Ir a matricularse</span>
+          <ArrowRightIcon
+            className="ml-4 rounded-full text-xl transition-all group-hover:-rotate-45 group-hover:bg-white group-hover:text-primary-800"
+          />
+        </ButtonLink>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

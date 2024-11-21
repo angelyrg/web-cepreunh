@@ -10,12 +10,12 @@ const Menu = () => {
   }
 
   return (
-    <nav className="bg-white shadow">
+    <nav className="w-full bg-white">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <a href="#" className="text-lg font-bold text-gray-800">
+              <a href="/" className="text-lg font-bold text-gray-800">
                 CepreUNH
               </a>
             </div>
@@ -23,12 +23,12 @@ const Menu = () => {
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:justify-between">
             <div className="flex space-x-4">
               <a
-                href="#"
+                href="/"
                 className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-200">
                 Inicio
               </a>
               <a
-                href="#"
+                href="/about"
                 className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-200">
                 Nosotros
               </a>

@@ -57,7 +57,7 @@ function ComunicadoItem({ titulo, fecha, archivo = '#' }) {
 
 function ComunicadosSection() {
   return (
-    <div className="bg-[#F7FBFE] px-4 py-8 sm:px-6 xl:px-0">
+    <section className="bg-[#F7FBFE] px-4 py-8 sm:px-6 xl:px-0">
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="font-noto text-4xl font-bold text-primary-800">Comunicados</h1>
@@ -76,7 +76,7 @@ function ComunicadosSection() {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 
