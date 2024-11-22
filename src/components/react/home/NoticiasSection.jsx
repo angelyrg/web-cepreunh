@@ -1,24 +1,5 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { CalendarIcon } from '../icons/CalendarIcon'
-
-const noticiasData = [
-  {
-    image: '/assets/images/sede1.png',
-    fecha: 'Hace 2 meses',
-    titular:
-      'Más de 600 estudiantes del CEPRE rindieron el último examen para el ingreso a la UNH - Universidad Nacional de Huancavelica'
-  },
-  {
-    image: '/assets/images/sede2.png',
-    fecha: 'Hace 3 meses',
-    titular: 'Más de 600 estudiantes del CEPRE rindieron el último e'
-  },
-  {
-    image: '/assets/images/sede3.png',
-    fecha: 'Hace 4 meses',
-    titular: 'Más de 600 estudiantes del CEPRE rindieron el último examen para el ingreso a la UNH'
-  }
-]
 
 function NoticiaItem({ image, fecha, titular }) {
   return (
@@ -40,6 +21,33 @@ function NoticiaItem({ image, fecha, titular }) {
 }
 
 function NoticiasSection() {
+  const [noticias, setNoticias] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  const fetchNoticias = async () => {
+    try {
+      const response = await fetch('/data/noticias.json')
+      if (!response.ok) {
+        throw new Error('Error al cargar noticias')
+      }
+      const data = await response.json()
+      setNoticias(data)
+    } catch (error) {
+      console.error(error)
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchNoticias()
+  }, [])
+
+  if (loading) return <div>Cargando...</div>
+  if (error) return <div>No se pudo obtener las noticias</div>
+
   return (
     <section className="bg-[#F7FBFE] px-4 py-8 sm:px-6 xl:px-0">
       <div className="mx-auto max-w-6xl">
@@ -49,9 +57,8 @@ function NoticiasSection() {
             Ver todos
           </a>
         </div>
-        {/* <div className="flex flex-wrap gap-3"> */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {noticiasData.map((sede, index) => (
+          {noticias.map((sede, index) => (
             <NoticiaItem key={index} image={sede.image} fecha={sede.fecha} titular={sede.titular} />
           ))}
         </div>

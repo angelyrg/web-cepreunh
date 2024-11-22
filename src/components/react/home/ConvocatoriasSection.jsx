@@ -5,19 +5,19 @@ import ArrowTopRightIcon from '../icons/ArrowTopRightIcon'
 const convocatoriasTipos = [
   {
     icono: <img src="/assets/icons/copa-icon.png" alt="Copa Icono" className="h-10 w-10" />,
-    color_hex: '#FFE2FD',
+    custom_class: 'hover:bg-[#FFE2FD]',
     descripcion: 'Concurso público de méritos',
     link: '#'
   },
   {
     icono: <img src="/assets/icons/megafono-icon.png" alt="megafono Icono" className="h-10 w-10" />,
-    color_hex: '#E4F4FF',
+    custom_class: 'hover:bg-[#E4F4FF]',
     descripcion: 'Convocatoria CAS',
     link: '#'
   },
   {
     icono: <img src="/assets/icons/maleta-icon.png" alt="maleta Icono" className="h-10 w-10" />,
-    color_hex: '#FFF0CC',
+    custom_class: 'hover:bg-[#FFF0CC]',
     descripcion: 'Prácticas profesionales',
     link: '#'
   },
@@ -29,7 +29,7 @@ const convocatoriasTipos = [
         className="h-10 w-10"
       />
     ),
-    color_hex: '#FFF0E3',
+    custom_class: 'hover:bg-[#FFF0E3]',
     descripcion: 'Nombramiento Docente',
     link: '#'
   },
@@ -41,17 +41,15 @@ const convocatoriasTipos = [
         className="h-10 w-10"
       />
     ),
-    color_hex: '#FFE2EC',
+    custom_class: 'hover:bg-[#FFE2EC]',
     descripcion: 'Convocatoria Docente',
     link: '#'
   }
 ]
 
-function ConvocatoriaItem({ descripcion, icono, theme_color = '', link = '#' }) {
+function ConvocatoriaItem({ descripcion, icono, customClass = '', link = '#' }) {
   return (
-    <a
-      className={`rounded-xl bg-white p-4 shadow-lg transition-all hover:bg-[${theme_color}]`}
-      href={link}>
+    <a className={`rounded-xl bg-white p-4 shadow-lg transition-all ${customClass}`} href={link}>
       <div className="flex h-full max-w-6xl flex-col">
         <div className="mb-3 text-3xl text-primary-800">{icono}</div>
         <div className="flex flex-grow items-end justify-between text-gray-800">
@@ -78,7 +76,7 @@ function ConvocatoriasSection() {
               key={index}
               descripcion={convocatoria.descripcion}
               icono={convocatoria.icono}
-              theme_color={convocatoria.color_hex}
+              customClass={convocatoria.custom_class}
               link={convocatoria.link}
             />
           ))}

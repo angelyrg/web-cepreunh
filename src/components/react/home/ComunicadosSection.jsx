@@ -1,28 +1,5 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Document1Icon from '../icons/Document1Icon'
-
-const comunicadosData = [
-  {
-    titulo: 'Resultados del primer examen de selección regular 2024',
-    fecha: '12/10/2024',
-    archivo: '#'
-  },
-  {
-    titulo: 'Resultados del segundo examen de selección regular 2024',
-    fecha: '13/10/2024',
-    archivo: '#'
-  },
-  {
-    titulo: 'Resultados del tercer examen de selección regular 2024',
-    fecha: '14/10/2024',
-    archivo: '#'
-  },
-  {
-    titulo: 'Resultados del tercer examen de selección regular 2024',
-    fecha: '15/10/2024',
-    archivo: '#'
-  }
-]
 
 function ComunicadoItem({ titulo, fecha, archivo = '#' }) {
   return (
@@ -56,6 +33,33 @@ function ComunicadoItem({ titulo, fecha, archivo = '#' }) {
 }
 
 function ComunicadosSection() {
+  const [comunicados, setComunicados] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  const fetchComunicados = async () => {
+    try {
+      const response = await fetch('/data/comunicados.json')
+      if (!response.ok) {
+        throw new Error('Error al cargar los comunicados')
+      }
+      const data = await response.json()
+      setComunicados(data)
+    } catch (error) {
+      console.error(error)
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchComunicados()
+  }, [])
+
+  if (loading) return <div>Cargando...</div>
+  if (error) return <div>No se pudo obtener comunicados</div>
+
   return (
     <section className="bg-[#F7FBFE] px-4 py-8 sm:px-6 xl:px-0">
       <div className="mx-auto max-w-6xl">
@@ -66,7 +70,7 @@ function ComunicadosSection() {
           </a>
         </div>
         <div className="flex flex-wrap gap-3 sm:flex-nowrap">
-          {comunicadosData.slice(0, 3).map((comunicado, index) => (
+          {comunicados.slice(0, 3).map((comunicado, index) => (
             <ComunicadoItem
               key={index}
               titulo={comunicado.titulo}

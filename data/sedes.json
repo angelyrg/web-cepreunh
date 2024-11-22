@@ -1,0 +1,27 @@
+[
+  {
+    "nombre": "Sede Principal",
+    "image": "/assets/images/sede1.png",
+    "direccion": "Jiron Victoria Garma Numero 275, Huancavelica"
+  },
+  {
+    "nombre": "Sede Tayacaja",
+    "image": "/assets/images/sede2.png",
+    "direccion": "Av Pampas cuadra 11 - DH, Tayacaja"
+  },
+  {
+    "nombre": "Sede Acobamba",
+    "image": "/assets/images/sede3.png",
+    "direccion": "789 Calle Terciaria, Acobamba"
+  },
+  {
+    "nombre": "Sede Terciaria",
+    "image": "/assets/images/sede3.png",
+    "direccion": "789 Calle Terciaria, Ciudad, País"
+  },
+  {
+    "nombre": "Sede Terciaria",
+    "image": "/assets/images/sede3.png",
+    "direccion": "789 Calle Terciaria, Ciudad, País"
+  }
+]

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 
@@ -7,34 +7,6 @@ import './SedesSection.css'
 
 import { LocationIcon } from '@/components/react/icons/LocationIcon'
 import { IconParkOutlineRight } from '@/components/react/icons/IconParkOutlineRight'
-
-const sedesData = [
-  {
-    nombre: 'Sede Principal',
-    image: '/assets/images/sede1.png',
-    direccion: 'Jiron Victoria Garma Numero 275, Huancavelica'
-  },
-  {
-    nombre: 'Sede Tayacaja',
-    image: '/assets/images/sede2.png',
-    direccion: 'Av Pampas cuadra 11 - DH, Tayacaja'
-  },
-  {
-    nombre: 'Sede Acobamba',
-    image: '/assets/images/sede3.png',
-    direccion: '789 Calle Terciaria, Acobamba'
-  },
-  {
-    nombre: 'Sede Terciaria',
-    image: '/assets/images/sede3.png',
-    direccion: '789 Calle Terciaria, Ciudad, País'
-  },
-  {
-    nombre: 'Sede Terciaria',
-    image: '/assets/images/sede3.png',
-    direccion: '789 Calle Terciaria, Ciudad, País'
-  }
-]
 
 function SedeItem({ nombre, image, direccion }) {
   return (
@@ -57,14 +29,32 @@ function SedesSection() {
   const swiperNextRef = useRef(null)
   const swiperInstance = useRef(null)
 
-  useEffect(() => {
-    if (swiperInstance.current) {
-      swiperInstance.current.params.navigation.prevEl = swiperPrevRef.current
-      swiperInstance.current.params.navigation.nextEl = swiperNextRef.current
-      swiperInstance.current.navigation.init()
-      swiperInstance.current.navigation.update()
+  const [sedes, setSedes] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  const fetchSedes = async () => {
+    try {
+      const response = await fetch('/data/sedes.json')
+      if (!response.ok) {
+        throw new Error('Error al cargar los datos de sedes')
+      }
+      const data = await response.json()
+      setSedes(data)
+    } catch (error) {
+      console.error(error)
+      setError(error.message)
+    } finally {
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
+    fetchSedes()
   }, [])
+
+  if (loading) return <div>Cargando...</div>
+  if (error) return <div>No se encontraron sedes</div>
 
   return (
     <>
@@ -93,37 +83,31 @@ function SedesSection() {
           </div>
           <div className="relative flex gap-2 overflow-hidden pb-8">
             <Swiper
-              onSwiper={(swiper) => (swiperInstance.current = swiper)}
+              onSwiper={(swiper) => {
+                swiperInstance.current = swiper
+                swiper.params.navigation.prevEl = swiperPrevRef.current
+                swiper.params.navigation.nextEl = swiperNextRef.current
+                swiper.navigation.init()
+                swiper.navigation.update()
+              }}
               modules={[Navigation, Pagination, Autoplay]}
               slidesPerView={1}
               slidesPerGroup={1}
               spaceBetween={10}
               loop={false}
+              autoplay={{ delay: 3000 }}
+              speed={1000}
+              pagination={{ clickable: true, el: '.custom-pagination' }}
               navigation={{
                 prevEl: swiperPrevRef.current,
                 nextEl: swiperNextRef.current
               }}
-              autoplay={{ delay: 3000 }}
-              speed={1000}
-              pagination={{
-                clickable: true,
-                el: '.custom-pagination'
-              }}
               breakpoints={{
-                640: {
-                  slidesPerView: 1,
-                  slidesPerGroup: 1
-                },
-                768: {
-                  slidesPerView: 2,
-                  slidesPerGroup: 2
-                },
-                1024: {
-                  slidesPerView: 3,
-                  slidesPerGroup: 3
-                }
+                640: { slidesPerView: 1, slidesPerGroup: 1 },
+                768: { slidesPerView: 2, slidesPerGroup: 2 },
+                1024: { slidesPerView: 3, slidesPerGroup: 3 }
               }}>
-              {sedesData.map((sede, index) => (
+              {sedes.map((sede, index) => (
                 <SwiperSlide key={index}>
                   <SedeItem nombre={sede.nombre} image={sede.image} direccion={sede.direccion} />
                 </SwiperSlide>

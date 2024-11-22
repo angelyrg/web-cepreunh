@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import 'swiper/swiper-bundle.css'
@@ -7,59 +7,41 @@ import './HeroSlider.css'
 import { IconParkOutlineRight } from '@/components/react/icons/IconParkOutlineRight'
 
 const HeroSlider = () => {
-  const slides = [
-    { id: 1, content: 'Slide 1', image: '/assets/images/sliders/hero_1.png' },
-    { id: 2, content: 'Slide 2', image: '/assets/images/sliders/hero_1.png' },
-    { id: 3, content: 'Slide 3', image: '/assets/images/sliders/hero_1.png' }
-  ]
-
   const swiperPrevRef = useRef(null)
   const swiperNextRef = useRef(null)
   const swiperInstance = useRef(null)
 
-  useEffect(() => {
-    if (swiperInstance.current) {
-      swiperInstance.current.params.navigation.prevEl = swiperPrevRef.current
-      swiperInstance.current.params.navigation.nextEl = swiperNextRef.current
-      swiperInstance.current.navigation.init()
-      swiperInstance.current.navigation.update()
+  const [slides, setSlides] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  const fetchSlides = async () => {
+    try {
+      const response = await fetch('/data/sliders.json')
+      if (!response.ok) {
+        throw new Error('Error al cargar los datos del slider')
+      }
+      const data = await response.json()
+      setSlides(data)
+    } catch (error) {
+      console.error(error)
+      setError(error.message)
+    } finally {
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
+    fetchSlides()
   }, [])
+
+  if (loading) return <div>Cargando...</div>
+  if (error) return <div>No se pudo obtener sliders</div>
 
   return (
     <>
       <div className="mx-auto flex max-w-6xl gap-8 px-2 pb-2">
         <div className="relative w-full overflow-hidden rounded-2xl">
-          <Swiper
-            onSwiper={(swiper) => (swiperInstance.current = swiper)}
-            modules={[Navigation, Pagination, Autoplay]}
-            slidesPerView={1}
-            spaceBetween={10}
-            loop={true}
-            navigation={{
-              prevEl: swiperPrevRef.current,
-              nextEl: swiperNextRef.current
-            }}
-            autoplay={{
-              delay: 3000,
-              disableOnInteraction: false
-            }}
-            pagination={{
-              clickable: true,
-              el: '.hero-pagination'
-            }}>
-            {slides.map((slide) => (
-              <SwiperSlide key={slide.id}>
-                <div className="flex h-60 items-center justify-center overflow-hidden sm:h-80 md:h-[420px]">
-                  <img
-                    src={slide.image}
-                    alt={`Slide ${slide.id}`}
-                    className="h-full w-full transform object-cover transition-transform duration-500 ease-in-out hover:scale-[102%]"
-                  />
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
           <div className="hero-pagination absolute z-10 text-center" />
           <div className="hero-navigation absolute bottom-6 right-4 z-10 flex justify-end gap-2">
             <button
@@ -79,6 +61,42 @@ const HeroSlider = () => {
               </span>
             </button>
           </div>
+          <Swiper
+            onSwiper={(swiper) => {
+              swiperInstance.current = swiper
+              swiper.params.navigation.prevEl = swiperPrevRef.current
+              swiper.params.navigation.nextEl = swiperNextRef.current
+              swiper.navigation.init()
+              swiper.navigation.update()
+            }}
+            modules={[Navigation, Pagination, Autoplay]}
+            slidesPerView={1}
+            spaceBetween={10}
+            loop={true}
+            autoplay={{
+              delay: 4000,
+              disableOnInteraction: true
+            }}
+            pagination={{
+              clickable: true,
+              el: '.hero-pagination'
+            }}
+            navigation={{
+              prevEl: swiperPrevRef.current,
+              nextEl: swiperNextRef.current
+            }}>
+            {slides.map((slide) => (
+              <SwiperSlide key={slide.id}>
+                <div className="flex h-60 items-center justify-center overflow-hidden sm:h-80 md:h-[420px]">
+                  <img
+                    src={slide.image}
+                    alt={`Slide ${slide.id}`}
+                    className="h-full w-full transform object-cover transition-transform duration-500 ease-in-out hover:scale-[102%]"
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
       </div>
     </>

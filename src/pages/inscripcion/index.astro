@@ -5,14 +5,23 @@ import Navbar from '@/sections/inscripcion/Navbar.astro'
 import Pasos from '@/sections/inscripcion/Pasos.astro'
 
 import ValidationForm from '@/components/react/inscripcion/ValidationForm'
+import ArrowRightIcon from '@/components/react/icons/ArrowRightIcon'
 
-import LogoCepreUNHBlanco from './public/assets/CeprUNH-positivo.png'
+import LogoCepreUNHBlanco from './public/assets/images/CepreUNH-positivo.webp'
 ---
 
 <Layout title="CepreUNH - Matrícula Virtual">
   <Navbar />
   <main class="mx-4 max-w-6xl md:mx-6 lg:mx-8 xl:mx-auto">
     <section class="mt-4">
+      <div class="my-5">
+        <a href="/" class="flex items-center text-primary-800 hover:font-bold">
+          <span class="rotate-180">
+            <ArrowRightIcon />
+          </span>
+          Atrás
+        </a>
+      </div>
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div class="rounded-lg border p-4 shadow">
           <div class="rounded-md bg-primary-800 px-3 py-3">
