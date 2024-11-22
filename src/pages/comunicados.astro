@@ -1,0 +1,26 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+
+import ButtonLink from '@/components/react/ButtonLink'
+
+import ArrowRightIcon from '@/components/react/icons/ArrowRightIcon'
+import ComunicadosSection from '@/components/react/comunicados/ComunicadosSection'
+---
+
+<BaseLayout title="Comunicados">
+  <article class="mx-auto mt-6 max-w-6xl px-2">
+    <div class="flex">
+      <a href="/" class="flex items-center text-primary-800">
+        <span class="rotate-180">
+          <ArrowRightIcon />
+        </span>
+        Atrás
+      </a>
+    </div>
+    <div class="mt-6 flex justify-between">
+      <h1 class="font-noto text-4xl font-bold text-primary-800">Comunicados</h1>
+    </div>
+
+    <ComunicadosSection client:load />
+  </article>
+</BaseLayout>
