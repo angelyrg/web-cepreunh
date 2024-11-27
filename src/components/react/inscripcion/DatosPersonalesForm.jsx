@@ -7,7 +7,6 @@ import InputLabel from '../InputLabel'
 import SelectLabel from '../SelectLabel'
 import Button from '../Button'
 
-import paises from '../../../../data/paises.json'
 import MultiSelectLabel from '../MultipleSelectLabel'
 
 const options = [
@@ -108,6 +107,15 @@ export const fetchData = async (endpoint, params = {}) => {
 }
 
 const DatosPersonalesForm = () => {
+  const [paises, setPaises] = useState([])
+
+  useEffect(() => {
+    fetch('/data/paises.json')
+      .then((response) => response.json())
+      .then((data) => setPaises(data))
+      .catch((error) => console.error('Error al cargar los datos:', error))
+  }, [])
+
   const apiUrl = import.meta.env.PUBLIC_API_URL
   const [initialValues, setInitialValues] = useState({
     id: '',
