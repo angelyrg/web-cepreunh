@@ -1,27 +1,22 @@
 [
   {
-    "nombre": "Sede Principal",
-    "image": "/assets/images/sede1.png",
-    "direccion": "Jiron Victoria Garma Numero 275, Huancavelica"
-  },
-  {
-    "nombre": "Sede Tayacaja",
-    "image": "/assets/images/sede2.png",
-    "direccion": "Av Pampas cuadra 11 - DH, Tayacaja"
+    "nombre": "Sede Central",
+    "image": "/assets/images/sedes/Fachada-UNH_01.jpg",
+    "direccion": "Sede Huancavelica, Huacavelica"
   },
   {
     "nombre": "Sede Acobamba",
-    "image": "/assets/images/sede3.png",
-    "direccion": "789 Calle Terciaria, Acobamba"
+    "image": "/assets/images/sedes/Sede Acobamba.jpg",
+    "direccion": "Acobamba, Huacavelica"
   },
   {
-    "nombre": "Sede Terciaria",
-    "image": "/assets/images/sede3.png",
-    "direccion": "789 Calle Terciaria, Ciudad, País"
+    "nombre": "Sede Tayacaja",
+    "image": "/assets/images/sedes/Escuela Profesional de Ingeniería de Sistemas.jpg",
+    "direccion": "Tayacaja, Huacavelica"
   },
   {
-    "nombre": "Sede Terciaria",
-    "image": "/assets/images/sede3.png",
-    "direccion": "789 Calle Terciaria, Ciudad, País"
+    "nombre": "Sede Lircay",
+    "image": "/assets/images/sedes/Lircay.jpg",
+    "direccion": "Lircay, Huacavelica"
   }
 ]

@@ -28,7 +28,7 @@ const Menu = () => {
                 Inicio
               </a>
               <a
-                href="/about"
+                href="#"
                 className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-200">
                 Nosotros
               </a>

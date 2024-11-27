@@ -10,8 +10,8 @@ import { IconParkOutlineRight } from '@/components/react/icons/IconParkOutlineRi
 
 function SedeItem({ nombre, image, direccion }) {
   return (
-    <div className="relative mx-6 overflow-hidden rounded-xl">
-      <img src={image} alt={nombre} className="py-auto h-auto w-full" draggable="false" />
+    <div className="relative mx-6 h-56 overflow-hidden rounded-xl border">
+      <img src={image} alt={nombre} className="h-full w-full object-cover" draggable="false" />
       <div className="absolute bottom-0 left-0 right-0 mx-2 mb-2 rounded-xl bg-white bg-opacity-30">
         <div className="flex rounded-xl p-2 leading-4 text-white backdrop-blur-sm">
           <span className="mr-1">

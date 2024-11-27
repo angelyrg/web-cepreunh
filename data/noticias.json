@@ -1,17 +1,7 @@
 [
   {
-    "image": "/assets/images/sede1.png",
+    "image": "/assets/images/sedes/Fachada-UNH_01.jpg",
     "fecha": "Hace 2 meses",
     "titular": "Más de 800 estudiantes del CEPRE rindieron el último examen para el ingreso a la UNH - Universidad Nacional de Huancavelica"
-  },
-  {
-    "image": "/assets/images/sede2.png",
-    "fecha": "Hace 3 meses",
-    "titular": "Más de 600 estudiantes del CEPRE rindieron el último e"
-  },
-  {
-    "image": "/assets/images/sede3.png",
-    "fecha": "Hace 6 meses",
-    "titular": "Más de 400 estudiantes del CEPRE rindieron el último examen para el ingreso a la UNH"
   }
 ]

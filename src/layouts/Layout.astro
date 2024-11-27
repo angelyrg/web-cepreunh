@@ -1,7 +1,7 @@
 ---
 import '@fontsource/poppins/400.css'
 import '@fontsource/poppins/500.css'
-import "@fontsource/noto-serif-jp/400.css";
+import '@fontsource/noto-serif-jp/400.css'
 
 interface Props {
   title: string
@@ -34,12 +34,59 @@ const { title } = Astro.props
     />
   </head>
   <body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+      <div class="spinner"></div>
+    </div>
+
     <slot />
+
+    <!-- JavaScript para ocultar el loader cuando la página esté lista -->
+    <script is:inline>
+      if (typeof window !== 'undefined') {
+        window.onload = () => {
+          const loader = document.getElementById('loader')
+          if (loader) loader.style.display = 'none'
+        }
+      }
+    </script>
   </body>
 </html>
 
 <style is:global>
   html {
     font-family: 'Poppins', sans-serif;
+  }
+
+  /* Estilos del loader */
+  .loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  .loader .spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 </style>
