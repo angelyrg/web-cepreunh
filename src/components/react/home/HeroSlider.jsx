@@ -40,7 +40,7 @@ const HeroSlider = () => {
 
   return (
     <>
-      <div className="mx-auto flex max-w-6xl gap-8 px-2 pb-2">
+      <div className="mx-auto mt-4 flex max-w-6xl gap-8 px-2 pb-2">
         <div className="relative w-full overflow-hidden rounded-2xl">
           <div className="hero-pagination absolute z-10 text-center" />
           <div className="hero-navigation absolute bottom-6 right-4 z-10 flex justify-end gap-2">
