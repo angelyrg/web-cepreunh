@@ -26,19 +26,18 @@ function ComunicadosSection() {
     fetchComunicados()
   }, [])
 
-  if (loading) return <div>Cargando...</div>
   if (error) return <div>No se pudo obtener comunicados</div>
 
   return (
     <section className="bg-[#F7FBFE] px-4 py-8 sm:px-6 xl:px-0">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex items-center justify-between align-middle">
           <h1 className="font-noto text-4xl font-bold text-primary-800">Comunicados</h1>
           <a href="/comunicados" className="text-center text-primary-800 hover:font-semibold">
             Ver todos
           </a>
         </div>
-        <div className="flex flex-wrap gap-3 sm:flex-nowrap">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {comunicados.slice(0, 3).map((comunicado, index) => (
             <ComunicadoItem
               key={index}

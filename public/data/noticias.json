@@ -1,7 +1,14 @@
 [
   {
-    "image": "/assets/images/sedes/Fachada-UNH_01.jpg",
-    "fecha": "Hace 2 meses",
-    "titular": "Más de 800 estudiantes del CEPRE rindieron el último examen para el ingreso a la UNH - Universidad Nacional de Huancavelica"
+    "image": "/assets/images/noticias/inscripciones_001.jpg",
+    "fecha": "18/11/2024",
+    "titular": "¡Las inscripciones para el CEPRE UNH! 👩‍⚕️👨‍⚕️🩺 - Del 09 al 26 de diciembre del 2024",
+    "content" : "#CEPREUNH | ¡Las inscripciones para el CEPRE UNH! 👩‍⚕️👨‍⚕️🩺 🔔 Inscripciones: De 09 hasta el 26 de diciembre 2024 📚 Inicio de clases: 02 de enero ☝🤓Forma parte de la #UNH y contribuye al bienestar de nuestra comunidad. ¡Te esperamos! 🙌 GRUPO DE WHATSAPP: https://chat.whatsapp.com/I4hmgQAzMAFEHKo12zTtN2"
+  },
+  {
+    "image": "/assets/images/noticias/capacitacion_000.jpg",
+    "fecha": "24/09/2024",
+    "titular": "Más de 300 estudiantes del CEPRE-UNH participaron en una jornada de capacitación, enfocada en mejorar sus habilidades de estudio y promover hábitos de alimentación saludable. ",
+    "content": "Más de 300 estudiantes del CEPRE-UNH participaron en una jornada de capacitación, enfocada en mejorar sus habilidades de estudio y promover hábitos de alimentación saludable. "
   }
 ]

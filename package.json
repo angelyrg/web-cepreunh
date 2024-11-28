@@ -16,6 +16,7 @@
     "@fontsource/noto-serif-jp": "^5.1.1",
     "@fontsource/poppins": "^5.1.0",
     "@midudev/tailwind-animations": "^0.1.0",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "astro": "^4.15.8",
     "axios": "^1.7.7",
     "formik": "^2.4.6",

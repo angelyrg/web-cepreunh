@@ -35,7 +35,6 @@ const HeroSlider = () => {
     fetchSlides()
   }, [])
 
-  if (loading) return <div>Cargando...</div>
   if (error) return <div>No se pudo obtener sliders</div>
 
   return (

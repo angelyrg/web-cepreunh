@@ -53,7 +53,6 @@ function SedesSection() {
     fetchSedes()
   }, [])
 
-  if (loading) return <div>Cargando...</div>
   if (error) return <div>No se encontraron sedes</div>
 
   return (

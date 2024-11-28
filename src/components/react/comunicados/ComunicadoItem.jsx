@@ -9,7 +9,7 @@ function ComunicadoItem({ titulo, fecha, archivo = '#' }) {
             <Document1Icon />
           </div>
           <div className="mb-3 ml-3">
-            <h3 className="mb-3 leading-5 text-gray-900">{titulo}</h3>
+            <h3 className="mb-3 line-clamp-3 leading-5 text-gray-900">{titulo}</h3>
             <p className="text-gray-500">{fecha}</p>
           </div>
         </div>
@@ -22,6 +22,8 @@ function ComunicadoItem({ titulo, fecha, archivo = '#' }) {
           </a>
           <a
             href={archivo}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex-1 pt-2 text-center text-primary-800 hover:font-semibold">
             Ver
           </a>

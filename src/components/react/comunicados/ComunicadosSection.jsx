@@ -26,12 +26,11 @@ function ComunicadosSection() {
     fetchComunicados()
   }, [])
 
-  if (loading) return <div>Cargando...</div>
   if (error) return <div>No se pudo obtener comunicados</div>
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="fgrid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {comunicados.slice(0, 3).map((comunicado, index) => (
           <ComunicadoItem
             key={index}
