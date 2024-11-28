@@ -3,6 +3,8 @@ import '@fontsource/poppins/400.css'
 import '@fontsource/poppins/500.css'
 import '@fontsource/noto-serif-jp/400.css'
 
+import Hotjar from '../components/astro/Hotjar.astro'
+
 interface Props {
   title: string
 }
@@ -47,6 +49,7 @@ const { title } = Astro.props
       type="text/css"
       href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
     />
+    <Hotjar />
   </head>
   <body>
     <!-- Loader -->
