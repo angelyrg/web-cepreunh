@@ -86,11 +86,11 @@ const HeroSlider = () => {
             }}>
             {slides.map((slide) => (
               <SwiperSlide key={slide.id}>
-                <div className="flex h-60 items-center justify-center overflow-hidden sm:h-80 md:h-[420px]">
+                <div className="flex h-auto items-center justify-center overflow-hidden">
                   <img
                     src={slide.image}
                     alt={`Slide ${slide.id}`}
-                    className="h-full w-full transform object-cover transition-transform duration-500 ease-in-out hover:scale-[102%]"
+                    className="h-full w-full transform object-contain transition-transform duration-500 ease-in-out hover:scale-[102%]"
                   />
                 </div>
               </SwiperSlide>

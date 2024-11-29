@@ -2,8 +2,15 @@ import React, { useEffect, useState } from 'react'
 
 export default function Popup() {
   const [isOpen, setIsOpen] = useState(true)
+  const [closing, setClosing] = useState(false)
   const openDialog = () => setIsOpen(true)
-  const closeDialog = () => setIsOpen(false)
+  const closeDialog = () => {
+    setClosing(true)
+    setTimeout(() => {
+      setIsOpen(false)
+      setClosing(false)
+    }, 150)
+  }
 
   const [popups, setPopups] = useState([])
   const [loading, setLoading] = useState(true)
@@ -17,7 +24,6 @@ export default function Popup() {
       }
       const data = await response.json()
       setPopups(data)
-      console.log(data)
     } catch (error) {
       console.error(error)
       setError(error.message)
@@ -36,10 +42,11 @@ export default function Popup() {
     <div>
       {isOpen && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative min-w-80 max-w-60 rounded-lg bg-white shadow-lg">
+          <div
+            className={`relative w-full max-w-2xl rounded-lg bg-white shadow-lg animate-duration-100 lg:w-[40vw] ${closing ? 'animate-fade-out-up' : ''}`}>
             <button
               onClick={closeDialog}
-              className="size- absolute right-2 z-[10] mt-2 rounded-full border-2 border-primary-800 bg-primary-800/30 px-4 py-2 pt-2 text-lg text-primary-800">
+              className="absolute right-2 z-[10] mt-2 rounded-full border border-primary-800 bg-primary-800/10 px-2 py-1 text-primary-800 hover:bg-primary-800/20">
               ✖
             </button>
 
