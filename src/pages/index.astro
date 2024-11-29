@@ -11,9 +11,11 @@ import ConvocatoriasSection from '@/components/react/home/ConvocatoriasSection'
 
 import imagenJovenCepre from '/public/assets/images/joven-cepre.png'
 import ButtonLink from '@/components/react/ButtonLink'
+import Popup from '@/components/react/Popup'
 ---
 
 <BaseLayout title="Cepre UNH">
+  <Popup client:load />
   <HeroSlider client:load />
   <div class="mx-auto flex max-w-6xl gap-8 px-2 py-12">
     <div class="hidden items-center justify-center px-8 text-center sm:block">
