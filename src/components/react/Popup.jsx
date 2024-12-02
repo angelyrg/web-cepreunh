@@ -50,9 +50,12 @@ export default function Popup() {
               ✖
             </button>
 
-            <a href="https://tinyurl.com/2anl87cr" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://drive.google.com/file/d/1edOFJ6ycZVYe2w9HIQli_5q1FvTDGw93/view"
+              target="_blank"
+              rel="noopener noreferrer">
               <img
-                src="/assets/images/popups/II examen cepre 2025.jpg"
+                src="/assets/images/popups/Adminsion2025I.jpg"
                 className="w-full rounded-lg"
                 alt=""
               />
